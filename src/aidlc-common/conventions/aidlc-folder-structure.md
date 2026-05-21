@@ -1,4 +1,4 @@
-# AI-DLC Folder Structure
+# AI-DLC 폴더 구조
 
 ```
 org-ai-kb/
@@ -144,25 +144,25 @@ org-ai-kb/
             └── (skills to be defined)
 ```
 
-## Document Lifecycle
+## 문서 라이프사이클
 
-There are two categories of documents in codekb.
+codekb의 문서는 두 가지 범주로 나뉩니다.
 
-**Category 1: Reverse-engineering documents** live flat at `codekb/<repo>/`. Generated when a repo is first onboarded via reverse engineering. They describe the repo as it exists today.
+**Category 1: Reverse-engineering 문서**는 `codekb/<repo>/` 바로 아래에 평탄하게 위치합니다. repo가 reverse engineering을 통해 처음 온보딩될 때 생성되며, 현재 시점의 repo 상태를 기술합니다.
 
-**Category 2: Engineering documents** are generated during construction and live under `codekb/<repo>/engineering/intent-<nnn>/`. During construction they reside in `aidlc-docs/intent-<nnn>/construction/<unit>/`. After the unit is deployed, they are moved to `codekb/<repo>/engineering/intent-<nnn>/`. Each intent gets its own folder.
+**Category 2: Engineering 문서**는 construction 중에 생성되며 `codekb/<repo>/engineering/intent-<nnn>/` 아래에 위치합니다. construction이 진행되는 동안에는 `aidlc-docs/intent-<nnn>/construction/<unit>/` 안에 있습니다. unit이 배포된 후에는 `codekb/<repo>/engineering/intent-<nnn>/`로 이동됩니다. 각 intent는 자신만의 폴더를 갖습니다.
 
-`intent-history.md` tracks which intents touched the repo in order. The last entry is the latest state.
+`intent-history.md`는 어떤 intent들이 어떤 순서로 repo에 영향을 주었는지를 추적합니다. 마지막 항목이 가장 최신 상태를 나타냅니다.
 
-## Design Knowledge Split
+## Design Knowledge 분리
 
-The intent folder captures the story of how work was done — the questions asked, plans made, decisions recorded, and progress tracked. Once an intent is complete, this folder becomes an immutable historical record. It answers "what happened and why."
+intent 폴더는 작업이 어떻게 수행되었는지에 관한 이야기를 담습니다 — 어떤 질문을 했고, 어떤 plan을 세웠고, 어떤 결정이 기록되었고, 어떤 진척이 추적되었는지. intent가 완료되면 이 폴더는 변경 불가능한 역사 기록이 됩니다. "무엇이, 왜 일어났는가"에 답하는 자료입니다.
 
-The codekb captures the current truth about each repository — its domain model, business rules, non-functional design, infrastructure, and how it integrates with other systems. Unlike the intent folder, codekb documents are living. They are never overwritten, only extended — although old decisions may become void over time, which may lead to removal of outdated sections.
+codekb는 각 repository에 대한 현재의 진실을 담습니다 — 도메인 모델, business rule, non-functional 설계, infrastructure, 그리고 다른 시스템과의 통합 방식 등. intent 폴더와 달리 codekb 문서는 살아 있는 문서입니다. 절대 덮어쓰지 않으며, 오직 확장만 합니다 — 다만 과거의 결정이 시간이 지나면서 무효화될 수 있고, 그 결과로 더 이상 유효하지 않은 섹션이 제거될 수는 있습니다.
 
-## Workspace Setup
+## Workspace 설정
 
-During construction, each unit team opens:
+construction 단계에서 각 unit 팀은 다음을 엽니다.
 
 ```
 <workspace>/

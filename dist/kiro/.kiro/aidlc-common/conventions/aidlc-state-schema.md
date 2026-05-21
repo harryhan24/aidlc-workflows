@@ -1,8 +1,8 @@
 # State Schema
 
-Single source of truth for the `intent-state.md` file format and the state machine it tracks.
+`intent-state.md` 파일 포맷과 그 파일이 추적하는 state machine에 대한 단일 진실 공급원(single source of truth)입니다.
 
-## File format
+## 파일 포맷
 
 ```markdown
 # Intent State
@@ -18,74 +18,74 @@ updated: <timestamp>
 | <skill-name> | <step> | <status> | <n> | <comma-separated bare filenames or —> |
 ```
 
-## Rules
+## 규칙
 
-### 1. One row per skill
+### 1. skill 하나당 한 행
 
-Each skill has exactly one row. When updating state, find the existing row for the skill name and replace the values in that row. Do NOT add a new row — duplicate rows break script parsing.
+각 skill은 정확히 하나의 행을 가집니다. state를 업데이트할 때는 해당 skill 이름의 기존 행을 찾아 그 행의 값을 교체합니다. 새 행을 추가하지 마십시오 — 중복된 행은 스크립트 파싱을 깨뜨립니다.
 
-### 2. State key
+### 2. state key
 
-- Inception skills: Skill column contains the skill name (e.g., `requirements-analysis`).
-- Construction skills (per-unit): Skill column contains `<skill-name>:<unit-name>` (e.g., `functional-design:auth-service`).
+- Inception skill: Skill 열에 skill 이름이 들어갑니다(예: `requirements-analysis`).
+- Construction skill(per-unit): Skill 열에 `<skill-name>:<unit-name>` 형식이 들어갑니다(예: `functional-design:auth-service`).
 
-### 3. Artifacts column
+### 3. Artifacts 열
 
-Bare filenames only — not full paths (e.g., `requirements.md`, not `inception/requirements-analysis/requirements.md`).
+전체 경로가 아닌 파일명만 적습니다(예: `inception/requirements-analysis/requirements.md`가 아니라 `requirements.md`).
 
-`process_checker` resolves them relative to:
+`process_checker`는 다음 기준으로 상대 경로를 해석합니다.
 - inception: `inception/<skill>/`
 - construction: `construction/<unit>/<skill>/`
 
-Comma-separated, or `—` if none.
+쉼표로 구분하며, 없을 경우 `—`로 표기합니다.
 
-### 4. Write responsibilities
+### 4. 쓰기 책임
 
-See `aidlc-common/protocols/aidlc-orchestrator-protocol.md` — "State write responsibilities".
+`aidlc-common/protocols/aidlc-orchestrator-protocol.md`의 "State write responsibilities"를 참조하십시오.
 
-## Script parsing contract
+## 스크립트 파싱 계약
 
-Scripts parse the table using patterns like:
+스크립트는 다음과 같은 패턴으로 테이블을 파싱합니다.
 
 ```bash
 grep "<skill-name>" intent-state.md | awk -F'|' '{print $3, $4}'
 ```
 
-Preserve the exact column layout.
+정확한 열 레이아웃을 유지해야 합니다.
 
 ---
 
-## Valid states
+## 유효한 state
 
-| Step | Status | Meaning |
+| Step | Status | 의미 |
 |---|---|---|
-| — | not-started | Skill has not begun |
-| clarification | pending | Builder needs to generate questions |
-| clarification | awaiting-human | Questions written, waiting for answers |
-| clarification | answered | Human answered, reviewing for ambiguity |
-| clarification | follow-up | Ambiguous answers, follow-up questions generated |
-| clarification | complete | Answers clear, ready to plan |
-| planning | pending | Builder needs to create plan |
-| planning | awaiting-human | Plan written, waiting for approval |
-| planning | revision-requested | Human requested changes |
-| planning | approved | Plan approved, ready to execute |
-| execution | pending | Builder needs to generate artifacts |
-| execution | complete | Artifacts written |
-| validation | pending | Validator needs to run |
-| validation | pass | All checks passed |
-| validation | fail | One or more checks failed |
-| verification | awaiting-human | Artifacts presented for human review |
-| verification | approved | Human approved |
-| verification | rejected | Human rejected, needs rework |
-| — | halting | Retries exhausted, escalated to human |
-| — | complete | Skill finished |
+| — | not-started | Skill이 아직 시작되지 않음 |
+| clarification | pending | Builder가 질문을 생성해야 함 |
+| clarification | awaiting-human | 질문 작성 완료, 답변 대기 중 |
+| clarification | answered | 사용자가 답변함, 모호성 검토 중 |
+| clarification | follow-up | 답변이 모호하여 후속 질문 생성됨 |
+| clarification | complete | 답변이 명확함, plan 단계 진행 가능 |
+| planning | pending | Builder가 plan을 작성해야 함 |
+| planning | awaiting-human | Plan 작성 완료, 승인 대기 중 |
+| planning | revision-requested | 사용자가 수정을 요청함 |
+| planning | approved | Plan 승인됨, 실행 준비 완료 |
+| execution | pending | Builder가 artifact를 생성해야 함 |
+| execution | complete | Artifact 작성 완료 |
+| validation | pending | Validator 실행 필요 |
+| validation | pass | 모든 검증 통과 |
+| validation | fail | 하나 이상의 검증 실패 |
+| verification | awaiting-human | 사용자 검토를 위해 artifact 제출됨 |
+| verification | approved | 사용자가 승인함 |
+| verification | rejected | 사용자가 거절함, 재작업 필요 |
+| — | halting | 재시도 횟수 소진, 사용자에게 에스컬레이션됨 |
+| — | complete | Skill 종료 |
 
-## Valid transitions
+## 유효한 전이
 
-The transitions below describe the full path with all flags `"true"` (the defaults). Two flags can collapse paths:
+아래 전이들은 모든 flag가 `"true"`(기본값)인 경우의 전체 경로를 설명합니다. 두 개의 flag는 이 경로를 단축시킬 수 있습니다.
 
-- `human-clarification: "false"` — the builder writes the entire clarification path in one pass (`pending → awaiting-human → answered → complete`); the human is not consulted.
-- `plan-creation: "false"` — the planning step is skipped entirely; transition goes from `clarification:complete → execution:pending`.
+- `human-clarification: "false"` — builder가 한 번에 전체 clarification 경로(`pending → awaiting-human → answered → complete`)를 작성하며, 사용자에게 묻지 않습니다.
+- `plan-creation: "false"` — planning 단계 자체가 생략되며, `clarification:complete → execution:pending`으로 곧바로 전이됩니다.
 
 ```
 — : not-started                   → clarification : pending
@@ -120,10 +120,10 @@ verification : approved            → — : complete
 verification : rejected            → execution : pending             (increment attempt)
 ```
 
-## Attempt counter
+## Attempt 카운터
 
-- Starts at 1
-- Increments on validation fail with retry, and on verification rejected
-- Never decreases
-- Max defined by config (default: 3)
-- Max reached + validation fail = halting
+- 1에서 시작합니다.
+- validation 실패 후 재시도 시, 그리고 verification 거절 시 증가합니다.
+- 절대 감소하지 않습니다.
+- 최대값은 설정으로 정의됩니다(기본값: 3).
+- 최대값에 도달한 상태에서 validation이 실패하면 halting으로 진입합니다.

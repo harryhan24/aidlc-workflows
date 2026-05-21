@@ -1,20 +1,20 @@
 # Intent Bootstrap — Validation Spec
 
-## Inputs
+## 입력
 
-- Artifacts: `intent.md` (at intent root), `bootstrap-context.md` (in `bootstrap/intent-bootstrap/`)
-- Skeleton files: `intent-prompt.md`, `state/intent-state.md`, `audit/intent-audit.md`, `workflow.md` (all at intent root)
-- Answered question file: `intent-bootstrap-questions.md` (in `bootstrap/intent-bootstrap/`)
-- Upstream: none — this skill receives the intent statement directly from the orchestrator and produces everything else
+- Artifacts: `intent.md` (intent 루트), `bootstrap-context.md` (`bootstrap/intent-bootstrap/` 내)
+- Skeleton files: `intent-prompt.md`, `state/intent-state.md`, `audit/intent-audit.md`, `workflow.md` (모두 intent 루트)
+- Answered question file: `intent-bootstrap-questions.md` (`bootstrap/intent-bootstrap/` 내)
+- Upstream: 없음 — 이 skill은 orchestrator로부터 intent 진술을 직접 받아 나머지 모든 것을 생성합니다
 
-## Rules
+## 규칙
 
-1. The intent directory exists under `org-ai-kb/aidlc-docs/` and follows the pattern `intent-<nnn>-<slug>/` where `<nnn>` is a zero-padded 3-digit number and `<slug>` is kebab-case.
-2. `intent-prompt.md` exists at the intent root and contains the verbatim user prompt.
-3. `state/intent-state.md` exists and matches the header format defined in `aidlc-common/conventions/aidlc-state-schema.md` (intent name, created/updated timestamps, Workflow Progress table header).
-4. `audit/intent-audit.md` exists at the intent root.
-5. `workflow.md` exists at the intent root and contains exactly one non-comment, non-empty line: the `workflow-composition` line invoking `--phase bootstrap`. It must NOT contain an `intent-bootstrap` line.
-6. `intent.md` exists at the intent root and contains: the verbatim user prompt, a summary, a slug, and a type.
-7. `bootstrap-context.md` exists in `bootstrap/intent-bootstrap/` and states: classification (greenfield, brownfield, or mixed), repos in scope (or "none"), codekb status, and a reverse-engineering decision.
-8. The slug in `intent.md` matches the slug in the intent directory name.
-9. The classification, repos, and reverse-engineering decision in `bootstrap-context.md` are consistent with the answers in `intent-bootstrap-questions.md`.
+1. intent 디렉터리는 `org-ai-kb/aidlc-docs/` 아래에 존재해야 하며, `intent-<nnn>-<slug>/` 패턴을 따라야 합니다. 여기서 `<nnn>`은 0으로 패딩된 3자리 숫자이고 `<slug>`은 kebab-case입니다.
+2. `intent-prompt.md`는 intent 루트에 존재해야 하며 사용자 프롬프트를 그대로 포함해야 합니다.
+3. `state/intent-state.md`는 존재해야 하며 `aidlc-common/conventions/aidlc-state-schema.md`에 정의된 헤더 형식과 일치해야 합니다(intent 이름, created/updated 타임스탬프, Workflow Progress 표 헤더).
+4. `audit/intent-audit.md`는 intent 루트에 존재해야 합니다.
+5. `workflow.md`는 intent 루트에 존재해야 하며, 정확히 하나의 주석이 아닌, 비어 있지 않은 라인을 포함해야 합니다: `--phase bootstrap`을 호출하는 `workflow-composition` 라인입니다. `intent-bootstrap` 라인을 포함해서는 안 됩니다.
+6. `intent.md`는 intent 루트에 존재해야 하며 다음을 포함해야 합니다: 사용자 프롬프트 원문, 요약, slug, type.
+7. `bootstrap-context.md`는 `bootstrap/intent-bootstrap/` 내에 존재해야 하며 다음을 기재해야 합니다: classification(greenfield, brownfield, 또는 mixed), 범위 내 repo(또는 "none"), codekb 상태, reverse-engineering 결정.
+8. `intent.md`의 slug는 intent 디렉터리 이름의 slug와 일치해야 합니다.
+9. `bootstrap-context.md`의 classification, repo, reverse-engineering 결정은 `intent-bootstrap-questions.md`의 답변과 일관되어야 합니다.
