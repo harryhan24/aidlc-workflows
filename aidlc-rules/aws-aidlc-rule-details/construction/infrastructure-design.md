@@ -1,80 +1,90 @@
 # Infrastructure Design
 
 ## Prerequisites
-- Functional Design must be complete for the unit
-- NFR Design recommended (provides logical components to map)
-- Execution plan must indicate Infrastructure Design stage should execute
+
+- Functional Design이 unit에 대해 완료되어야 합니다.
+- NFR Design을 권장합니다(mapping할 logical components 제공).
+- execution plan이 Infrastructure Design stage 실행을 지시해야 합니다.
 
 ## Overview
-Map logical software components to actual infrastructure choices for deployment environments.
+
+deployment environments를 위해 logical software components를 actual infrastructure choices에 매핑합니다.
 
 ## Steps to Execute
 
 ### Step 1: Analyze Design Artifacts
-- Read functional design from `aidlc-docs/construction/{unit-name}/functional-design/`
-- Read NFR design from `aidlc-docs/construction/{unit-name}/nfr-design/` (if exists)
-- Identify logical components needing infrastructure
+
+- `aidlc-docs/construction/{unit-name}/functional-design/`에서 functional design을 읽습니다.
+- 존재하는 경우 `aidlc-docs/construction/{unit-name}/nfr-design/`에서 NFR design을 읽습니다.
+- infrastructure가 필요한 logical components를 식별합니다.
 
 ### Step 2: Create Infrastructure Design Plan
-- Generate plan with checkboxes [] for infrastructure design
-- Focus on mapping to actual services (AWS, Azure, GCP, on-premise)
-- Each step should have a checkbox []
+
+- infrastructure design을 위한 checkboxes []가 포함된 plan을 생성합니다.
+- actual services(AWS, Azure, GCP, on-premise)로의 mapping에 집중합니다.
+- 각 step에는 checkbox []가 있어야 합니다.
 
 ### Step 3: Generate Context-Appropriate Questions
-**DIRECTIVE**: Thoroughly analyze the functional and NFR design to identify ALL areas where clarification would improve infrastructure decisions. Be proactive in asking questions to ensure comprehensive infrastructure coverage.
 
-**CRITICAL**: Default to asking questions when there is ANY ambiguity or missing detail that could affect infrastructure quality. It's better to ask too many questions than to make incorrect infrastructure assumptions.
+**DIRECTIVE**: functional design과 NFR design을 철저히 분석해 clarification이 infrastructure decisions를 개선할 수 있는 모든 영역을 식별합니다. comprehensive infrastructure coverage를 보장하기 위해 적극적으로 질문하세요.
 
-**MANDATORY**: Evaluate ALL of the following categories by asking targeted questions about each. For each category, determine applicability based on evidence from the functional and NFR design artifacts -- do not skip categories without explicit justification:
+**CRITICAL**: infrastructure quality에 영향을 줄 수 있는 ambiguity 또는 missing detail이 조금이라도 있으면 기본적으로 질문합니다. incorrect infrastructure assumptions를 하는 것보다 질문을 너무 많이 하는 편이 낫습니다.
 
-- EMBED questions using [Answer]: tag format
-- Focus on ANY ambiguities, missing information, or areas needing clarification
-- Generate questions wherever user input would improve infrastructure decisions
-- **When in doubt, ask the question** - overconfidence leads to poor infrastructure choices
+**MANDATORY**: 다음 category를 모두 평가하고 각 category에 대해 targeted questions를 묻습니다. 각 category에 대해서는 functional and NFR design artifacts의 evidence를 기준으로 applicability를 판단합니다. explicit justification 없이 categories를 건너뛰지 마세요.
 
-**Question categories to evaluate** (consider ALL categories):
-- **Deployment Environment** - Ask about cloud provider preferences, environment setup, and deployment targets
-- **Compute Infrastructure** - Ask about compute service choices, sizing, and scaling requirements
-- **Storage Infrastructure** - Ask about database selection, storage patterns, and data lifecycle needs
-- **Messaging Infrastructure** - Ask about messaging/queuing services, event-driven patterns, and async processing
-- **Networking Infrastructure** - Ask about load balancing, API gateway approach, and network topology
-- **Monitoring Infrastructure** - Ask about observability tooling, alerting strategy, and logging requirements
-- **Shared Infrastructure** - Ask about infrastructure sharing strategy, multi-tenancy, and resource isolation
+- [Answer]: tag format을 사용해 questions를 EMBED합니다.
+- ambiguity, missing information, clarification이 필요한 모든 영역에 집중합니다.
+- user input이 infrastructure decisions를 개선할 수 있는 곳에는 질문을 생성합니다.
+- **확신이 없으면 질문하세요** - overconfidence는 poor infrastructure choices로 이어집니다.
+
+**평가할 question categories**(모든 category 고려):
+
+- **Deployment Environment** - cloud provider preferences, environment setup, deployment targets에 대해 질문합니다.
+- **Compute Infrastructure** - compute service choices, sizing, scaling requirements에 대해 질문합니다.
+- **Storage Infrastructure** - database selection, storage patterns, data lifecycle needs에 대해 질문합니다.
+- **Messaging Infrastructure** - messaging/queuing services, event-driven patterns, async processing에 대해 질문합니다.
+- **Networking Infrastructure** - load balancing, API gateway approach, network topology에 대해 질문합니다.
+- **Monitoring Infrastructure** - observability tooling, alerting strategy, logging requirements에 대해 질문합니다.
+- **Shared Infrastructure** - infrastructure sharing strategy, multi-tenancy, resource isolation에 대해 질문합니다.
 
 ### Step 4: Store Plan
-- Save as `aidlc-docs/construction/plans/{unit-name}-infrastructure-design-plan.md`
-- Include all [Answer]: tags for user input
+
+- `aidlc-docs/construction/plans/{unit-name}-infrastructure-design-plan.md`로 저장합니다.
+- user input을 위한 모든 [Answer]: tags를 포함합니다.
 
 ### Step 5: Collect and Analyze Answers
-- Wait for user to complete all [Answer]: tags
-- Review for vague or ambiguous responses
-- Add follow-up questions if needed
+
+- 사용자가 모든 [Answer]: tags를 완료할 때까지 기다립니다.
+- vague 또는 ambiguous responses가 있는지 검토합니다.
+- 필요한 경우 follow-up questions를 추가합니다.
 
 ### Step 6: Generate Infrastructure Design Artifacts
-- Create `aidlc-docs/construction/{unit-name}/infrastructure-design/infrastructure-design.md`
-- Create `aidlc-docs/construction/{unit-name}/infrastructure-design/deployment-architecture.md`
-- If shared infrastructure: Create `aidlc-docs/construction/shared-infrastructure.md`
+
+- `aidlc-docs/construction/{unit-name}/infrastructure-design/infrastructure-design.md`를 생성합니다.
+- `aidlc-docs/construction/{unit-name}/infrastructure-design/deployment-architecture.md`를 생성합니다.
+- shared infrastructure가 있는 경우 `aidlc-docs/construction/shared-infrastructure.md`를 생성합니다.
 
 ### Step 7: Present Completion Message
-- Present completion message in this structure:
-     1. **Completion Announcement** (mandatory): Always start with this:
+
+- 다음 구조로 completion message를 제시합니다.
+     1. **Completion Announcement**(mandatory): 항상 다음으로 시작합니다.
 
 ```markdown
 # 🏢 Infrastructure Design Complete - [unit-name]
 ```
 
-     2. **AI Summary** (optional): Provide structured bullet-point summary of infrastructure design
+     2. **AI Summary**(optional): infrastructure design에 대한 structured bullet-point summary를 제공합니다.
         - Format: "Infrastructure design has mapped [description]:"
-        - List key infrastructure services and components (bullet points)
-        - List deployment architecture decisions and rationale
-        - Mention cloud provider choices and service mappings
-        - DO NOT include workflow instructions ("please review", "let me know", "proceed to next phase", "before we proceed")
-        - Keep factual and content-focused
-     3. **Formatted Workflow Message** (mandatory): Always end with this exact format:
+        - key infrastructure services와 components를 bullet points로 나열합니다.
+        - deployment architecture decisions와 rationale을 나열합니다.
+        - cloud provider choices와 service mappings를 언급합니다.
+        - workflow instructions("please review", "let me know", "proceed to next phase", "before we proceed")를 포함하지 마세요.
+        - factual하고 content-focused하게 유지합니다.
+     3. **Formatted Workflow Message**(mandatory): 항상 다음 exact format으로 끝냅니다.
 
 ```markdown
 > **📋 <u>**REVIEW REQUIRED:**</u>**  
-> Please examine the infrastructure design at: `aidlc-docs/construction/[unit-name]/infrastructure-design/`
+> infrastructure design을 검토해 주세요: `aidlc-docs/construction/[unit-name]/infrastructure-design/`
 
 
 
@@ -82,18 +92,20 @@ Map logical software components to actual infrastructure choices for deployment 
 >
 > **You may:**
 >
-> 🔧 **Request Changes** - Ask for modifications to the infrastructure design based on your review  
-> ✅ **Continue to Next Stage** - Approve infrastructure design and proceed to **Code Generation**
+> 🔧 **Request Changes** - 검토 결과를 바탕으로 infrastructure design 수정을 요청하세요
+> ✅ **Continue to Next Stage** - infrastructure design을 승인하고 **Code Generation**으로 진행합니다.
 
 ---
 ```
 
 ### Step 8: Wait for Explicit Approval
-- Do not proceed until the user explicitly approves the infrastructure design
-- Approval must be clear and unambiguous
-- If user requests changes, update the design and repeat the approval process
+
+- 사용자가 infrastructure design을 명시적으로 승인할 때까지 진행하지 마세요.
+- approval은 clear and unambiguous해야 합니다.
+- 사용자가 changes를 요청하면 design을 업데이트하고 approval process를 반복합니다.
 
 ### Step 9: Record Approval and Update Progress
-- Log approval in audit.md with timestamp
-- Record the user's approval response with timestamp
-- Mark Infrastructure Design stage complete in aidlc-state.md
+
+- approval을 timestamp와 함께 audit.md에 기록합니다.
+- 사용자의 approval response를 timestamp와 함께 기록합니다.
+- aidlc-state.md에서 Infrastructure Design stage complete를 표시합니다.

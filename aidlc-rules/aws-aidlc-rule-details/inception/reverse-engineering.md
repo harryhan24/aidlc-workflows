@@ -1,43 +1,49 @@
 # Reverse Engineering
 
-**Purpose**: Analyze existing codebase and generate comprehensive design artifacts
+**Purpose**: 기존 codebase를 분석하고 comprehensive design artifacts를 생성합니다.
 
-**Execute when**: Brownfield project detected (existing code found in workspace)
+**Execute when**: Brownfield project가 감지된 경우(workspace에서 기존 code 발견)
 
-**Skip when**: Greenfield project (no existing code)
+**Skip when**: Greenfield project인 경우(기존 code 없음)
 
-**Rerun behavior**: Rerun is controlled by workspace-detection.md. If existing reverse engineering artifacts are found and are still current, they are loaded and reverse engineering is skipped. If artifacts are stale (older than the codebase's last significant modification) or the user explicitly requests a rerun, reverse engineering executes again to ensure artifacts reflect current code state
+**Rerun behavior**: rerun은 workspace-detection.md가 제어합니다. 기존 reverse engineering artifacts가 발견되고 아직 current 상태이면 이를 로드하고 reverse engineering을 건너뜁니다. artifacts가 stale(codebase의 last significant modification보다 오래됨)하거나 사용자가 명시적으로 rerun을 요청하면, artifacts가 현재 code state를 반영하도록 reverse engineering을 다시 실행합니다.
 
 ## Step 1: Multi-Package Discovery
 
 ### 1.1 Scan Workspace
-- All packages (not just mentioned ones)
-- Package relationships via config files
-- Package types: Application, CDK/Infrastructure, Models, Clients, Tests
+
+- 모든 packages(언급된 package만이 아님)
+- config files를 통한 package relationships
+- package types: Application, CDK/Infrastructure, Models, Clients, Tests
 
 ### 1.2 Understand the Business Context
-- The core business that the system is implementing overall
-- The business overview of every package
-- List of Business Transactions that are implemented in the system
+
+- system이 전체적으로 구현하는 core business
+- 모든 package의 business overview
+- system에 구현된 Business Transactions 목록
 
 ### 1.3 Infrastructure Discovery
-- CDK packages (package.json with CDK dependencies)
-- Terraform (.tf files)
-- CloudFormation (.yaml/.json templates)
+
+- CDK packages(CDK dependencies가 있는 package.json)
+- Terraform(.tf files)
+- CloudFormation(.yaml/.json templates)
 - Deployment scripts
 
 ### 1.4 Build System Discovery
+
 - Build systems: Brazil, Maven, Gradle, npm
-- Config files for build-system declarations
-- Build dependencies between packages
+- build-system declarations를 위한 config files
+- packages 사이의 build dependencies
 
 ### 1.5 Service Architecture Discovery
-- Lambda functions (handlers, triggers)
-- Container services (Docker/ECS configs)
-- API definitions (Smithy models, OpenAPI specs)
-- Data stores (DynamoDB, S3, etc.)
+
+- Lambda functions(handlers, triggers)
+- Container services(Docker/ECS configs)
+- API definitions(Smithy models, OpenAPI specs)
+- Data stores(DynamoDB, S3 등)
 
 ### 1.6 Code Quality Analysis
+
 - Programming languages and frameworks
 - Test coverage indicators
 - Linting configurations
@@ -45,95 +51,95 @@
 
 ## Step 2: Generate Business Overview Documentation
 
-Create `aidlc-docs/inception/reverse-engineering/business-overview.md`:
+`aidlc-docs/inception/reverse-engineering/business-overview.md`를 생성합니다.
 
 ```markdown
 # Business Overview
 
 ## Business Context Diagram
-[Mermaid diagram showing the Business Context]
+[Business Context를 보여주는 Mermaid diagram]
 
 ## Business Description
-- **Business Description**: [Overall Business description of what the system does]
-- **Business Transactions**: [List of Business Transactions that the system implements and their descriptions]
-- **Business Dictionary**: [Business dictionary terms that the system follows and their meaning]
+- **Business Description**: [system이 수행하는 전체 Business description]
+- **Business Transactions**: [system이 구현하는 Business Transactions 목록과 설명]
+- **Business Dictionary**: [system이 따르는 Business dictionary terms와 의미]
 
 ## Component Level Business Descriptions
 ### [Package/Component Name]
-- **Purpose**: [What it does from the business perspective]
-- **Responsibilities**: [Key responsibilities]
+- **Purpose**: [business 관점에서 수행하는 일]
+- **Responsibilities**: [주요 responsibilities]
 ```
 
 ## Step 3: Generate Architecture Documentation
 
-Create `aidlc-docs/inception/reverse-engineering/architecture.md`:
+`aidlc-docs/inception/reverse-engineering/architecture.md`를 생성합니다.
 
 ```markdown
 # System Architecture
 
 ## System Overview
-[High-level description of the system]
+[system의 high-level description]
 
 ## Architecture Diagram
-[Mermaid diagram showing all packages, services, data stores, relationships]
+[모든 packages, services, data stores, relationships를 보여주는 Mermaid diagram]
 
 ## Component Descriptions
 ### [Package/Component Name]
-- **Purpose**: [What it does]
-- **Responsibilities**: [Key responsibilities]
-- **Dependencies**: [What it depends on]
+- **Purpose**: [수행하는 일]
+- **Responsibilities**: [주요 responsibilities]
+- **Dependencies**: [의존 대상]
 - **Type**: [Application/Infrastructure/Model/Client/Test]
 
 ## Data Flow
-[Mermaid sequence diagram of key workflows]
+[주요 workflows의 Mermaid sequence diagram]
 
 ## Integration Points
-- **External APIs**: [List with purposes]
-- **Databases**: [List with purposes]
-- **Third-party Services**: [List with purposes]
+- **External APIs**: [목적이 포함된 목록]
+- **Databases**: [목적이 포함된 목록]
+- **Third-party Services**: [목적이 포함된 목록]
 
 ## Infrastructure Components
-- **CDK Stacks**: [List with purposes]
-- **Deployment Model**: [Description]
+- **CDK Stacks**: [목적이 포함된 목록]
+- **Deployment Model**: [설명]
 - **Networking**: [VPC, subnets, security groups]
 ```
 
 ## Step 4: Generate Code Structure Documentation
 
-Create `aidlc-docs/inception/reverse-engineering/code-structure.md`:
+`aidlc-docs/inception/reverse-engineering/code-structure.md`를 생성합니다.
 
 ```markdown
 # Code Structure
 
 ## Build System
 - **Type**: [Maven/Gradle/npm/Brazil]
-- **Configuration**: [Key build files and settings]
+- **Configuration**: [주요 build files 및 settings]
 
 ## Key Classes/Modules
-[Mermaid class diagram or module hierarchy]
+[Mermaid class diagram 또는 module hierarchy]
 
 ### Existing Files Inventory
-[List all source files with their purposes - these are candidates for modification in brownfield projects]
+[모든 source files와 각 purpose를 나열합니다. 이 파일들은 brownfield projects에서 modification candidates입니다.]
 
 **Example format**:
 - `[path/to/file]` - [Purpose/responsibility]
 
 ## Design Patterns
 ### [Pattern Name]
-- **Location**: [Where used]
-- **Purpose**: [Why used]
-- **Implementation**: [How implemented]
+- **Location**: [사용 위치]
+- **Purpose**: [사용 이유]
+- **Implementation**: [구현 방식]
 
 ## Critical Dependencies
 ### [Dependency Name]
 - **Version**: [Version number]
-- **Usage**: [How and where used]
-- **Purpose**: [Why needed]
+- **Usage**: [사용 방식과 위치]
+- **Purpose**: [필요한 이유]
 ```
 
 ## Step 5: Generate API Documentation
 
-Create `aidlc-docs/inception/reverse-engineering/api-documentation.md`:
+`aidlc-docs/inception/reverse-engineering/api-documentation.md`를 생성합니다.
 
 ```markdown
 # API Documentation
@@ -142,13 +148,13 @@ Create `aidlc-docs/inception/reverse-engineering/api-documentation.md`:
 ### [Endpoint Name]
 - **Method**: [GET/POST/PUT/DELETE]
 - **Path**: [/api/path]
-- **Purpose**: [What it does]
+- **Purpose**: [수행하는 일]
 - **Request**: [Request format]
 - **Response**: [Response format]
 
 ## Internal APIs
 ### [Interface/Class Name]
-- **Methods**: [List with signatures]
+- **Methods**: [signatures가 포함된 목록]
 - **Parameters**: [Parameter descriptions]
 - **Return Types**: [Return type descriptions]
 
@@ -161,7 +167,7 @@ Create `aidlc-docs/inception/reverse-engineering/api-documentation.md`:
 
 ## Step 6: Generate Component Inventory
 
-Create `aidlc-docs/inception/reverse-engineering/component-inventory.md`:
+`aidlc-docs/inception/reverse-engineering/component-inventory.md`를 생성합니다.
 
 ```markdown
 # Component Inventory
@@ -188,7 +194,7 @@ Create `aidlc-docs/inception/reverse-engineering/component-inventory.md`:
 
 ## Step 7: Generate Technology Stack Documentation
 
-Create `aidlc-docs/inception/reverse-engineering/technology-stack.md`:
+`aidlc-docs/inception/reverse-engineering/technology-stack.md`를 생성합니다.
 
 ```markdown
 # Technology Stack
@@ -211,34 +217,34 @@ Create `aidlc-docs/inception/reverse-engineering/technology-stack.md`:
 
 ## Step 8: Generate Dependencies Documentation
 
-Create `aidlc-docs/inception/reverse-engineering/dependencies.md`:
+`aidlc-docs/inception/reverse-engineering/dependencies.md`를 생성합니다.
 
 ```markdown
 # Dependencies
 
 ## Internal Dependencies
-[Mermaid diagram showing package dependencies]
+[package dependencies를 보여주는 Mermaid diagram]
 
 ### [Package A] depends on [Package B]
 - **Type**: [Compile/Runtime/Test]
-- **Reason**: [Why dependency exists]
+- **Reason**: [dependency가 존재하는 이유]
 
 ## External Dependencies
 ### [Dependency Name]
 - **Version**: [Version]
-- **Purpose**: [Why used]
+- **Purpose**: [사용 이유]
 - **License**: [License type]
 ```
 
 ## Step 9: Generate Code Quality Assessment
 
-Create `aidlc-docs/inception/reverse-engineering/code-quality-assessment.md`:
+`aidlc-docs/inception/reverse-engineering/code-quality-assessment.md`를 생성합니다.
 
 ```markdown
 # Code Quality Assessment
 
 ## Test Coverage
-- **Overall**: [Percentage or Good/Fair/Poor/None]
+- **Overall**: [Percentage 또는 Good/Fair/Poor/None]
 - **Unit Tests**: [Status]
 - **Integration Tests**: [Status]
 
@@ -257,7 +263,7 @@ Create `aidlc-docs/inception/reverse-engineering/code-quality-assessment.md`:
 
 ## Step 10: Create Timestamp File
 
-Create `aidlc-docs/inception/reverse-engineering/reverse-engineering-timestamp.md`:
+`aidlc-docs/inception/reverse-engineering/reverse-engineering-timestamp.md`를 생성합니다.
 
 ```markdown
 # Reverse Engineering Metadata
@@ -279,7 +285,7 @@ Create `aidlc-docs/inception/reverse-engineering/reverse-engineering-timestamp.m
 
 ## Step 11: Update State Tracking
 
-Update `aidlc-docs/aidlc-state.md`:
+`aidlc-docs/aidlc-state.md`를 업데이트합니다.
 
 ```markdown
 ## Reverse Engineering Status
@@ -292,20 +298,20 @@ Update `aidlc-docs/aidlc-state.md`:
 ```markdown
 # 🔍 Reverse Engineering Complete
 
-[AI-generated summary of key findings from analysis in the form of bullet points]
+[analysis에서 얻은 key findings를 bullet points 형태로 AI가 생성한 summary]
 
-> **📋 <u>**REVIEW REQUIRED:**</u>**  
-> Please examine the reverse engineering artifacts at: `aidlc-docs/inception/reverse-engineering/`
+> **📋 <u>**REVIEW REQUIRED:**</u>**
+> reverse engineering artifacts를 검토해 주세요: `aidlc-docs/inception/reverse-engineering/`
 
 > **🚀 <u>**WHAT'S NEXT?**</u>**
 >
 > **You may:**
 >
-> 🔧 **Request Changes** - Ask for modifications to the reverse engineering analysis if required
-> ✅ **Approve & Continue** - Approve analysis and proceed to **Requirements Analysis**
+> 🔧 **Request Changes** - 필요하다면 reverse engineering analysis 수정을 요청하세요
+> ✅ **Approve & Continue** - analysis를 승인하고 **Requirements Analysis**로 진행합니다
 ```
 
 ## Step 13: Wait for User Approval
 
-- **MANDATORY**: Do not proceed until user explicitly approves
-- **MANDATORY**: Log user's response in audit.md with complete raw input
+- **MANDATORY**: 사용자가 명시적으로 승인할 때까지 진행하지 마세요.
+- **MANDATORY**: 사용자 응답을 complete raw input으로 audit.md에 기록합니다.

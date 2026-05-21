@@ -1,83 +1,94 @@
 # Workflow Planning
 
-**Purpose**: Determine which phases to execute and create comprehensive execution plan
+**Purpose**: 실행할 phases를 결정하고 comprehensive execution plan을 작성합니다.
 
-**Always Execute**: This phase always runs after understanding requirements and scope
+**Always Execute**: 이 phase는 requirements와 scope를 이해한 뒤 항상 실행합니다.
 
 ## Step 1: Load All Prior Context
 
 ### 1.1 Load Reverse Engineering Artifacts (if brownfield)
+
 - architecture.md
 - component-inventory.md
 - technology-stack.md
 - dependencies.md
 
 ### 1.2 Load Requirements Analysis
-- requirements.md (includes intent analysis)
-- requirement-verification-questions.md (with answers)
+
+- requirements.md(intent analysis 포함)
+- requirement-verification-questions.md(answers 포함)
 
 ### 1.3 Load User Stories (if executed)
+
 - stories.md
 - personas.md
 
 ## Step 2: Detailed Scope and Impact Analysis
 
-**Now that we have complete context (requirements + stories), perform detailed analysis:**
+**complete context(requirements + stories)를 확보했으므로 detailed analysis를 수행합니다.**
 
 ### 2.1 Transformation Scope Detection (Brownfield Only)
 
-**IF brownfield project**, analyze transformation scope:
+**IF brownfield project**, transformation scope를 분석합니다.
 
 #### Architectural Transformation
+
 - **Single component change** vs **architectural transformation**
 - **Infrastructure changes** vs **application changes**
-- **Deployment model changes** (Lambda→Container, EC2→Serverless, etc.)
+- **Deployment model changes**(Lambda→Container, EC2→Serverless 등)
 
 #### Related Component Identification
-For transformations, identify:
-- **Infrastructure code** that needs updates
-- **CDK stacks** requiring changes
+
+transformation의 경우 다음을 식별합니다.
+
+- update가 필요한 **Infrastructure code**
+- 변경이 필요한 **CDK stacks**
 - **API Gateway** configurations
 - **Load balancer** requirements
-- **Networking** changes needed
+- 필요한 **Networking** changes
 - **Monitoring/logging** adaptations
 
 #### Cross-Package Impact
-- **CDK infrastructure** packages requiring updates
-- **Shared models** needing version updates
-- **Client libraries** requiring endpoint changes
-- **Test packages** needing new test scenarios
+
+- update가 필요한 **CDK infrastructure** packages
+- version updates가 필요한 **Shared models**
+- endpoint changes가 필요한 **Client libraries**
+- 새 test scenarios가 필요한 **Test packages**
 
 ### 2.2 Change Impact Assessment
 
 #### Impact Areas
-1. **User-facing changes**: Does this affect user experience?
-2. **Structural changes**: Does this change system architecture?
-3. **Data model changes**: Does this affect database schemas or data structures?
-4. **API changes**: Does this affect interfaces or contracts?
-5. **NFR impact**: Does this affect performance, security, or scalability?
+
+1. **User-facing changes**: user experience에 영향을 주는가?
+2. **Structural changes**: system architecture를 변경하는가?
+3. **Data model changes**: database schemas 또는 data structures에 영향을 주는가?
+4. **API changes**: interfaces 또는 contracts에 영향을 주는가?
+5. **NFR impact**: performance, security, scalability에 영향을 주는가?
 
 #### Application Layer Impact (if applicable)
-- **Code changes**: New entry points, adapters, configurations
-- **Dependencies**: New libraries, framework changes
-- **Configuration**: Environment variables, config files
-- **Testing**: Unit tests, integration tests
+
+- **Code changes**: new entry points, adapters, configurations
+- **Dependencies**: new libraries, framework changes
+- **Configuration**: environment variables, config files
+- **Testing**: unit tests, integration tests
 
 #### Infrastructure Layer Impact (if applicable)
-- **Deployment model**: Lambda→ECS, EC2→Fargate, etc.
+
+- **Deployment model**: Lambda→ECS, EC2→Fargate 등
 - **Networking**: VPC, security groups, load balancers
-- **Storage**: Persistent volumes, shared storage
-- **Scaling**: Auto-scaling policies, capacity planning
+- **Storage**: persistent volumes, shared storage
+- **Scaling**: auto-scaling policies, capacity planning
 
 #### Operations Layer Impact (if applicable)
+
 - **Monitoring**: CloudWatch, custom metrics, dashboards
-- **Logging**: Log aggregation, structured logging
-- **Alerting**: Alarm configurations, notification channels
+- **Logging**: log aggregation, structured logging
+- **Alerting**: alarm configurations, notification channels
 - **Deployment**: CI/CD pipeline changes, rollback strategies
 
 ### 2.3 Component Relationship Mapping (Brownfield Only)
 
-**IF brownfield project**, create component dependency graph:
+**IF brownfield project**, component dependency graph를 생성합니다.
 
 ```markdown
 ## Component Relationships
@@ -88,98 +99,114 @@ For transformations, identify:
 - **Supporting Components**: [Monitoring, logging, deployment]
 ```
 
-For each related component:
+각 related component에 대해 다음을 식별합니다.
+
 - **Change Type**: Major, Minor, Configuration-only
 - **Change Reason**: Direct dependency, deployment model, networking
 - **Change Priority**: Critical, Important, Optional
 
 ### 2.4 Risk Assessment
 
-Evaluate risk level:
-1. **Low**: Isolated change, easy rollback, well-understood
-2. **Medium**: Multiple components, moderate rollback, some unknowns
-3. **High**: System-wide impact, complex rollback, significant unknowns
-4. **Critical**: Production-critical, difficult rollback, high uncertainty
+risk level을 평가합니다.
+
+1. **Low**: isolated change, easy rollback, well-understood
+2. **Medium**: multiple components, moderate rollback, some unknowns
+3. **High**: system-wide impact, complex rollback, significant unknowns
+4. **Critical**: production-critical, difficult rollback, high uncertainty
 
 ## Step 3: Phase Determination
 
 ### 3.1 User Stories - Already Executed or Skip?
-**Already executed**: Move to next determination
+
+**Already executed**: 다음 determination으로 이동합니다.
 **Not executed - Execute IF**:
-- Multiple user personas
-- User experience impact
-- Acceptance criteria needed
-- Team collaboration required
+
+- multiple user personas
+- user experience impact
+- acceptance criteria needed
+- team collaboration required
 
 **Skip IF**:
-- Internal refactoring
-- Bug fix with clear reproduction
-- Technical debt reduction
-- Infrastructure changes
+
+- internal refactoring
+- clear reproduction이 있는 bug fix
+- technical debt reduction
+- infrastructure changes
 
 ### 3.2 Application Design - Execute IF:
-- New components or services needed
-- Component methods and business rules need definition
-- Service layer design required
-- Component dependencies need clarification
+
+- 새로운 components 또는 services 필요
+- component methods와 business rules 정의 필요
+- service layer design 필요
+- component dependencies clarification 필요
 
 **Skip IF**:
-- Changes within existing component boundaries
-- No new components or methods
-- Pure implementation changes
+
+- 기존 component boundaries 안의 변경
+- 새로운 components 또는 methods 없음
+- pure implementation changes
 
 ### 3.3 Units Generation - Execute IF:
-- New data models or schemas
-- API changes or new endpoints
-- Complex algorithms or business logic
-- State management changes
-- Multiple packages require changes
-- Infrastructure-as-code updates needed
+
+- 새로운 data models 또는 schemas
+- API changes 또는 new endpoints
+- complex algorithms 또는 business logic
+- state management changes
+- multiple packages require changes
+- infrastructure-as-code updates 필요
 
 **Skip IF**:
-- Simple logic changes
+
+- simple logic changes
 - UI-only changes
-- Configuration updates
-- Straightforward implementations
+- configuration updates
+- straightforward implementations
 
 ### 3.4 NFR Implementation - Execute IF:
-- Performance requirements
-- Security considerations
-- Scalability concerns
-- Monitoring/observability needed
+
+- performance requirements
+- security considerations
+- scalability concerns
+- monitoring/observability 필요
 
 **Skip IF**:
-- Existing NFR setup sufficient
-- No new NFR requirements
-- Simple changes with no NFR impact
+
+- 기존 NFR setup이 충분함
+- new NFR requirements 없음
+- NFR impact가 없는 simple changes
 
 ## Step 4: Note Adaptive Detail
 
-**See [depth-levels.md](../common/depth-levels.md) for adaptive depth explanation**
+**adaptive depth 설명은 [depth-levels.md](../common/depth-levels.md)를 참조하세요.**
 
-For each stage that will execute:
-- All defined artifacts will be created
-- Detail level within artifacts adapts to problem complexity
-- Model determines appropriate detail based on problem characteristics
+실행할 각 stage에 대해:
+
+- 정의된 모든 artifacts가 생성됩니다.
+- artifacts 안의 detail level은 problem complexity에 맞게 조정됩니다.
+- model은 problem characteristics를 바탕으로 적절한 detail을 결정합니다.
 
 ## Step 5: Multi-Module Coordination Analysis (Brownfield Only)
 
-**IF brownfield with multiple modules/packages**, analyze dependencies and determine optimal update strategy:
+**IF brownfield with multiple modules/packages**, dependencies를 분석하고 optimal update strategy를 결정합니다.
 
 ### 5.1 Analyze Module Dependencies
-- Examine build system dependencies and dependency manifests
-- Identify build-time vs runtime dependencies
-- Map API contracts and shared interfaces between modules
+
+- build system dependencies 및 dependency manifests 검토
+- build-time vs runtime dependencies 식별
+- modules 사이의 API contracts 및 shared interfaces mapping
 
 ### 5.2 Determine Update Strategy
-Based on dependency analysis, decide:
-- **Update sequence**: Which modules must be updated first due to dependencies
-- **Parallelization opportunities**: Which modules can be updated simultaneously
-- **Coordination requirements**: Version compatibility, API contracts, deployment order
-- **Testing strategy**: Per-module vs integrated testing approach
-- **Rollback strategy**: Recovery plan if mid-sequence failures occur
+
+dependency analysis를 바탕으로 다음을 결정합니다.
+
+- **Update sequence**: dependencies 때문에 먼저 업데이트해야 하는 modules
+- **Parallelization opportunities**: 동시에 업데이트할 수 있는 modules
+- **Coordination requirements**: version compatibility, API contracts, deployment order
+- **Testing strategy**: per-module vs integrated testing approach
+- **Rollback strategy**: mid-sequence failures가 발생할 경우 recovery plan
 
 ### 5.3 Document Coordination Plan
+
 ```markdown
 ## Module Update Strategy
 - **Update Approach**: [Sequential/Parallel/Hybrid]
@@ -188,20 +215,23 @@ Based on dependency analysis, decide:
 - **Testing Checkpoints**: [When to validate integration]
 ```
 
-Identify for each affected module:
+영향을 받는 각 module에 대해 다음을 식별합니다.
+
 - **Update priority**: Must-update-first vs can-update-later
-- **Dependency constraints**: What it depends on, what depends on it
-- **Change scope**: Major (breaking), Minor (compatible), Patch (fixes)
+- **Dependency constraints**: 무엇에 의존하는지, 무엇이 이 module에 의존하는지
+- **Change scope**: Major(breaking), Minor(compatible), Patch(fixes)
 
 ## Step 6: Generate Workflow Visualization
 
-Create Mermaid flowchart showing:
-- All phases in sequence
-- EXECUTE or SKIP decision for each conditional phase
-- Proper styling for each phase state
+다음을 보여주는 Mermaid flowchart를 생성합니다.
 
-**Styling rules** (add after flowchart):
-```
+- sequence 안의 모든 phases
+- 각 conditional phase에 대한 EXECUTE 또는 SKIP decision
+- 각 phase state에 맞는 styling
+
+**Styling rules**(flowchart 뒤에 추가):
+
+```text
 style WD fill:#4CAF50,stroke:#1B5E20,stroke-width:3px,color:#fff
 style CG fill:#4CAF50,stroke:#1B5E20,stroke-width:3px,color:#fff
 style BT fill:#4CAF50,stroke:#1B5E20,stroke-width:3px,color:#fff
@@ -213,17 +243,18 @@ linkStyle default stroke:#333,stroke-width:2px
 ```
 
 **Style Guidelines**:
-- Completed/Always execute: `fill:#4CAF50,stroke:#1B5E20,stroke-width:3px,color:#fff` (Material Green with white text)
-- Conditional EXECUTE: `fill:#FFA726,stroke:#E65100,stroke-width:3px,stroke-dasharray: 5 5,color:#000` (Material Orange with black text)
-- Conditional SKIP: `fill:#BDBDBD,stroke:#424242,stroke-width:2px,stroke-dasharray: 5 5,color:#000` (Material Gray with black text)
-- Start/End: `fill:#CE93D8,stroke:#6A1B9A,stroke-width:3px,color:#000` (Material Purple with black text)
-- Phase containers: Use lighter Material colors (INCEPTION: #BBDEFB, CONSTRUCTION: #C8E6C9, OPERATIONS: #FFF59D)
+
+- Completed/Always execute: `fill:#4CAF50,stroke:#1B5E20,stroke-width:3px,color:#fff`(Material Green with white text)
+- Conditional EXECUTE: `fill:#FFA726,stroke:#E65100,stroke-width:3px,stroke-dasharray: 5 5,color:#000`(Material Orange with black text)
+- Conditional SKIP: `fill:#BDBDBD,stroke:#424242,stroke-width:2px,stroke-dasharray: 5 5,color:#000`(Material Gray with black text)
+- Start/End: `fill:#CE93D8,stroke:#6A1B9A,stroke-width:3px,color:#000`(Material Purple with black text)
+- Phase containers: 더 밝은 Material colors 사용(INCEPTION: #BBDEFB, CONSTRUCTION: #C8E6C9, OPERATIONS: #FFF59D)
 
 ## Step 7: Create Execution Plan Document
 
-Create `aidlc-docs/inception/plans/execution-plan.md`:
+`aidlc-docs/inception/plans/execution-plan.md`를 생성합니다.
 
-```markdown
+````markdown
 # Execution Plan
 
 ## Detailed Analysis Summary
@@ -252,8 +283,8 @@ Create `aidlc-docs/inception/plans/execution-plan.md`:
 
 ```mermaid
 flowchart TD
-    Start(["User Request"])
-    
+    Start(["사용자 요청"])
+
     subgraph INCEPTION["🔵 INCEPTION PHASE"]
         WD["Workspace Detection<br/><b>STATUS</b>"]
         RE["Reverse Engineering<br/><b>STATUS</b>"]
@@ -263,7 +294,7 @@ flowchart TD
         AD["Application Design<br/><b>STATUS</b>"]
         UG["Units Generation<br/>(Planning + Generation)<br/><b>STATUS</b>"]
     end
-    
+
     subgraph CONSTRUCTION["🟢 CONSTRUCTION PHASE"]
         FD["Functional Design<br/><b>STATUS</b>"]
         NFRA["NFR Requirements<br/><b>STATUS</b>"]
@@ -272,23 +303,23 @@ flowchart TD
         CG["Code Generation<br/>(Planning + Generation)<br/><b>EXECUTE</b>"]
         BT["Build and Test<br/><b>EXECUTE</b>"]
     end
-    
+
     subgraph OPERATIONS["🟡 OPERATIONS PHASE"]
         OPS["Operations<br/><b>PLACEHOLDER</b>"]
     end
-    
+
     Start --> WD
     WD --> RA
     RA --> WP
     WP --> CG
     CG --> BT
-    BT --> End(["Complete"])
-    
-    %% Replace STATUS with COMPLETED, SKIP, EXECUTE as appropriate
-    %% Apply styling based on status
+    BT --> End(["완료"])
+
+    %% STATUS를 실제 상태(COMPLETED, SKIP, EXECUTE)로 바꾸세요
+    %% status에 맞는 styling을 적용하세요
 ```
 
-**Note**: Replace STATUS placeholders with actual phase status (COMPLETED/SKIP/EXECUTE) and apply appropriate styling
+**Note**: STATUS placeholders를 실제 phase status(COMPLETED/SKIP/EXECUTE)로 바꾸고 적절한 styling을 적용하세요.
 
 ## Phases to Execute
 
@@ -299,30 +330,30 @@ flowchart TD
 - [x] User Stories (COMPLETED/SKIPPED)
 - [x] Execution Plan (IN PROGRESS)
 - [ ] Application Design - [EXECUTE/SKIP]
-  - **Rationale**: [Why executing or skipping]
+  - **Rationale**: [실행 또는 skip 이유]
 - [ ] Units Generation - [EXECUTE/SKIP]
-  - **Rationale**: [Why executing or skipping]
+  - **Rationale**: [실행 또는 skip 이유]
 
 ### 🟢 CONSTRUCTION PHASE
 - [ ] Functional Design - [EXECUTE/SKIP]
-  - **Rationale**: [Why executing or skipping]
+  - **Rationale**: [실행 또는 skip 이유]
 - [ ] NFR Requirements - [EXECUTE/SKIP]
-  - **Rationale**: [Why executing or skipping]
+  - **Rationale**: [실행 또는 skip 이유]
 - [ ] NFR Design - [EXECUTE/SKIP]
-  - **Rationale**: [Why executing or skipping]
+  - **Rationale**: [실행 또는 skip 이유]
 - [ ] Infrastructure Design - [EXECUTE/SKIP]
-  - **Rationale**: [Why executing or skipping]
+  - **Rationale**: [실행 또는 skip 이유]
 - [ ] Code Generation - EXECUTE (ALWAYS)
-  - **Rationale**: Implementation planning and code generation needed
+  - **Rationale**: Implementation planning 및 code generation 필요
 - [ ] Build and Test - EXECUTE (ALWAYS)
-  - **Rationale**: Build, test, and verification needed
+  - **Rationale**: Build, test, verification 필요
 
 ### 🟡 OPERATIONS PHASE
 - [ ] Operations - PLACEHOLDER
-  - **Rationale**: Future deployment and monitoring workflows
+  - **Rationale**: 향후 deployment 및 monitoring workflows
 
 ## Package Change Sequence (Brownfield Only)
-[If applicable, list package update sequence with dependencies]
+[해당되는 경우 dependencies가 포함된 package update sequence를 나열]
 
 ## Estimated Timeline
 - **Total Phases**: [Number]
@@ -334,13 +365,13 @@ flowchart TD
 - **Quality Gates**: [List]
 
 [IF brownfield]
-- **Integration Testing**: All components working together
-- **Operational Readiness**: Monitoring, logging, alerting working
-```
+- **Integration Testing**: 모든 components가 함께 동작함
+- **Operational Readiness**: monitoring, logging, alerting이 동작함
+````
 
 ## Step 8: Initialize State Tracking
 
-Update `aidlc-docs/aidlc-state.md`:
+`aidlc-docs/aidlc-state.md`를 업데이트합니다.
 
 ```markdown
 # AI-DLC State Tracking
@@ -389,7 +420,7 @@ Update `aidlc-docs/aidlc-state.md`:
 ```markdown
 # 📋 Workflow Planning Complete
 
-I've created a comprehensive execution plan based on:
+다음을 바탕으로 comprehensive execution plan을 만들었습니다.
 - Your request: [Summary]
 - Existing system: [Summary if brownfield]
 - Requirements: [Summary if executed]
@@ -402,28 +433,28 @@ I've created a comprehensive execution plan based on:
 
 **Recommended Execution Plan**:
 
-I recommend executing [X] stages:
+[X]개 stages 실행을 권장합니다.
 
 🔵 **INCEPTION PHASE:**
-1. [Stage name] - *Rationale:* [Why executing]
-2. [Stage name] - *Rationale:* [Why executing]
+1. [Stage name] - *Rationale:* [실행 이유]
+2. [Stage name] - *Rationale:* [실행 이유]
 ...
 
 🟢 **CONSTRUCTION PHASE:**
-3. [Stage name] - *Rationale:* [Why executing]
-4. [Stage name] - *Rationale:* [Why executing]
+3. [Stage name] - *Rationale:* [실행 이유]
+4. [Stage name] - *Rationale:* [실행 이유]
 ...
 
-I recommend skipping [Y] stages:
+[Y]개 stages skip을 권장합니다.
 
 🔵 **INCEPTION PHASE:**
-1. [Stage name] - *Rationale:* [Why skipping]
-2. [Stage name] - *Rationale:* [Why skipping]
+1. [Stage name] - *Rationale:* [skip 이유]
+2. [Stage name] - *Rationale:* [skip 이유]
 ...
 
 🟢 **CONSTRUCTION PHASE:**
-3. [Stage name] - *Rationale:* [Why skipping]
-4. [Stage name] - *Rationale:* [Why skipping]
+3. [Stage name] - *Rationale:* [skip 이유]
+4. [Stage name] - *Rationale:* [skip 이유]
 ...
 
 [IF brownfield with multiple packages]
@@ -434,28 +465,28 @@ I recommend skipping [Y] stages:
 
 **Estimated Timeline**: [Duration]
 
-> **📋 <u>**REVIEW REQUIRED:**</u>**  
-> Please examine the execution plan at: `aidlc-docs/inception/plans/execution-plan.md`
+> **📋 <u>**REVIEW REQUIRED:**</u>**
+> execution plan을 검토해 주세요: `aidlc-docs/inception/plans/execution-plan.md`
 
 > **🚀 <u>**WHAT'S NEXT?**</u>**
 >
 > **You may:**
 >
-> 🔧 **Request Changes** - Ask for modifications to the execution plan if required
+> 🔧 **Request Changes** - 필요하다면 execution plan 수정을 요청하세요
 > [IF any stages are skipped:]
-> 📝 **Add Skipped Stages** - Choose to include stages currently marked as SKIP
-> ✅ **Approve & Continue** - Approve plan and proceed to **[Next Stage Name]**
+> 📝 **Add Skipped Stages** - 현재 SKIP으로 표시된 stages를 포함하도록 선택합니다
+> ✅ **Approve & Continue** - plan을 승인하고 **[Next Stage Name]**으로 진행합니다
 ```
 
 ## Step 10: Handle User Response
 
-- **If approved**: Proceed to next stage in execution plan
-- **If changes requested**: Update execution plan and re-confirm
-- **If user wants to force include/exclude stages**: Update plan accordingly
+- **If approved**: execution plan의 next stage로 진행합니다.
+- **If changes requested**: execution plan을 업데이트하고 다시 확인합니다.
+- **If user wants to force include/exclude stages**: 그에 맞게 plan을 업데이트합니다.
 
 ## Step 11: Log Interaction
 
-Log in `aidlc-docs/audit.md`:
+`aidlc-docs/audit.md`에 기록합니다.
 
 ```markdown
 ## Workflow Planning - Approval
