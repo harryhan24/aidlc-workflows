@@ -1,21 +1,21 @@
-# ASCII Diagram Standards
+# ASCII 다이어그램 표준 (ASCII Diagram Standards)
 
-## MANDATORY: Use Basic ASCII Only
+## MANDATORY: 기본 ASCII만 사용
 
-**CRITICAL**: ALWAYS use basic ASCII characters for diagrams (maximum compatibility).
+**CRITICAL**: 다이어그램에는 항상 기본 ASCII 문자만 사용합니다 (최대 호환성).
 
-### ✅ ALLOWED: `+` `-` `|` `^` `v` `<` `>` and alphanumeric text
+### ✅ 허용: `+` `-` `|` `^` `v` `<` `>` 및 영숫자 텍스트
 
-### ❌ FORBIDDEN: Unicode box-drawing characters
-- NO: `┌` `─` `│` `└` `┐` `┘` `├` `┤` `┬` `┴` `┼` `▼` `▲` `►` `◄`
-- Reason: Inconsistent rendering across fonts/platforms
+### ❌ 금지: 유니코드 박스-드로잉 문자
+- 사용 금지: `┌` `─` `│` `└` `┐` `┘` `├` `┤` `┬` `┴` `┼` `▼` `▲` `►` `◄`
+- 이유: 폰트/플랫폼에 따라 렌더링이 일관되지 않음
 
-## Standard ASCII Diagram Patterns
+## 표준 ASCII 다이어그램 패턴
 
-### CRITICAL: Character Width Rule
-**Every line in a box MUST have EXACTLY the same character count (including spaces)**
+### CRITICAL: 문자 폭 룰
+**박스 안의 모든 라인은 정확히 같은 문자 수(공백 포함)를 가져야 합니다.**
 
-✅ CORRECT (all lines = 67 chars):
+✅ 올바른 예 (모든 라인 = 67자):
 ```
 +---------------------------------------------------------------+
 |                      Component Name                           |
@@ -23,7 +23,7 @@
 +---------------------------------------------------------------+
 ```
 
-❌ WRONG (inconsistent widths):
+❌ 잘못된 예 (폭이 일관되지 않음):
 ```
 +---------------------------------------------------------------+
 |                      Component Name                           |
@@ -31,7 +31,7 @@
 +---------------------------------------------------------------+
 ```
 
-### Box Pattern
+### 박스 패턴
 ```
 +-----------------------------------------------------+
 |                                                     |
@@ -43,7 +43,7 @@
 +-----------------------------------------------------+
 ```
 
-### Nested Boxes
+### 중첩 박스
 ```
 +-------------------------------------------------------+
 |              Web Server (PHP Runtime)                 |
@@ -58,7 +58,7 @@
 +-------------------------------------------------------+
 ```
 
-### Arrows and Connections
+### 화살표와 연결
 ```
 +----------+
 |  Source  |
@@ -71,14 +71,14 @@
 +----------+
 ```
 
-### Horizontal Flow
+### 수평 플로우
 ```
 +-------+     +-------+     +-------+
 | Step1 | --> | Step2 | --> | Step3 |
 +-------+     +-------+     +-------+
 ```
 
-### Vertical Flow with Labels
+### 라벨이 있는 수직 플로우
 ```
 User Action Flow:
     |
@@ -100,17 +100,16 @@ User Action Flow:
 +----------+
 ```
 
-## Validation
+## 검증
 
-Before creating diagrams:
-- [ ] Basic ASCII only: `+` `-` `|` `^` `v` `<` `>`
-- [ ] No Unicode box-drawing
-- [ ] Spaces (not tabs) for alignment
-- [ ] Corners use `+`
-- [ ] **ALL box lines same character width** (count characters including spaces)
-- [ ] Test: Verify corners align vertically in monospace font
+다이어그램을 만들기 전에:
+- [ ] 기본 ASCII만 사용: `+` `-` `|` `^` `v` `<` `>`
+- [ ] 유니코드 박스-드로잉 없음
+- [ ] 정렬에 공백 사용 (탭 금지)
+- [ ] 모서리는 `+` 사용
+- [ ] **모든 박스 라인의 문자 폭이 동일** (공백 포함해 문자 수 세기)
+- [ ] 테스트: 고정폭 글꼴에서 모서리가 세로로 정렬되는지 확인
 
-## Alternative
+## 대안
 
-For complex diagrams, use Mermaid (see `content-validation.md`)
-
+복잡한 다이어그램에는 Mermaid를 사용하세요 (`content-validation.md` 참고).

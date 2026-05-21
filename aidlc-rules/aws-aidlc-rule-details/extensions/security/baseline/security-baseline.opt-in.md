@@ -2,9 +2,9 @@
 
 **Extension**: Security Baseline
 
-## Opt-In Prompt
+## 옵트인 프롬프트
 
-The following question is automatically included in the Requirements Analysis clarifying questions when this extension is loaded:
+본 익스텐션이 로드되면 Requirements Analysis 단계의 명확화 질문에 다음 질문이 자동으로 포함됩니다.
 
 ```markdown
 ## Question: Security Extensions

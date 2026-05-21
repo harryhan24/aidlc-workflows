@@ -1,12 +1,12 @@
-# Working with AIDLC
+# AIDLC 활용 가이드 (Working with AIDLC)
 
-This guide helps you get the most out of AI-DLC (AI-Driven Development Life Cycle). It covers how to interact effectively with the AI at each stage — from first prompt to working code.
+이 가이드는 AI-DLC(AI-Driven Development Life Cycle)를 최대한 활용하는 방법을 안내합니다. 첫 프롬프트부터 동작하는 코드까지 — 각 스테이지에서 AI와 효과적으로 상호작용하는 방법을 다룹니다.
 
-Start with the basics in each section. The advanced tips are drawn from real workshop experience and address the patterns that teams found most useful once they got comfortable with the fundamentals.
+각 섹션의 기본 내용부터 시작하세요. 고급 팁은 실제 워크숍 경험에서 도출된 것으로, 팀이 기본을 익힌 뒤 가장 유용하다고 평가한 패턴들을 다룹니다.
 
 ---
 
-## Table of Contents
+## 목차
 
 1. [General Rules](#1-general-rules)
 2. [Inception Phase](#2-inception-phase)
@@ -17,13 +17,13 @@ Start with the basics in each section. The advanced tips are drawn from real wor
 
 ## 1. General Rules
 
-### Asking Questions Without Changing Files
+### 파일을 변경하지 않고 질문하기
 
-One of the most important habits to build early: **not every question should trigger a document update**.
+초기에 길러야 할 가장 중요한 습관 중 하나: **모든 질문이 문서 업데이트를 트리거해서는 안 된다**.
 
-When you ask the AI something without guarding your question, it may interpret it as a change request and immediately update design documents. To prevent this, prefix exploratory questions with a clear no-change instruction.
+가드 없이 AI에게 무언가를 물으면, AI는 그것을 변경 요청으로 해석하여 즉시 설계 문서를 업데이트할 수 있습니다. 이를 막으려면 탐색적 질문에 명확한 no-change 지시를 접두로 붙이세요.
 
-**Basic pattern:**
+**기본 패턴:**
 
 ```text
 Do not update any documents. Help me understand why [this decision] was made.
@@ -38,23 +38,23 @@ Do not change anything. Assess the impact of [proposed change].
 I want to understand the consequences before we decide.
 ```
 
-These patterns let you think out loud with the AI, evaluate options, and challenge decisions without committing to anything. Once you're satisfied with the answer, follow up with a deliberate update instruction if needed.
+이러한 패턴은 어떤 것도 확정하지 않은 채로 AI와 함께 큰 소리로 생각하고, 옵션을 평가하고, 결정에 도전할 수 있게 해줍니다. 답변에 만족하면 필요한 경우 의도적인 업데이트 지시로 후속 조치하세요.
 
-> **Tip**: Start every exploratory message with "Do not update any documents." You can always drop that constraint once you're ready to act.
+> **Tip**: 모든 탐색적 메시지를 "Do not update any documents."로 시작하세요. 행동할 준비가 되면 그 제약을 언제든 떼낼 수 있습니다.
 
 ---
 
-### The Question → Doc → Approval Flow
+### Question → Doc → Approval 플로우
 
-AIDLC never asks clarifying questions inline in the chat. It writes questions into a markdown file and waits for you to fill in your answers there. This keeps a durable record of every decision and makes it easy for the whole team to contribute.
+AIDLC는 채팅에서 인라인으로 명확화 질문을 던지지 않습니다. 질문을 마크다운 파일에 쓰고, 당신이 그 안에 답변을 채워 넣기를 기다립니다. 이는 모든 결정에 대한 영구적인 기록을 남기고 팀 전체가 기여하기 쉽게 만들어 줍니다.
 
-**Step 1 — AIDLC creates a question file**
+**Step 1 — AIDLC가 질문 파일을 생성합니다**
 
-The AI creates a file like `aidlc-docs/inception/requirements/requirement-verification-questions.md` and stops. It will not proceed until you answer.
+AI는 `aidlc-docs/inception/requirements/requirement-verification-questions.md` 같은 파일을 만들고 멈춥니다. 당신이 답변할 때까지 진행하지 않습니다.
 
-**Step 2 — You fill in your answers**
+**Step 2 — 답변을 채워 넣습니다**
 
-Open the file and fill in each `[Answer]:` tag. Questions use multiple-choice format:
+파일을 열고 각 `[Answer]:` 태그를 채웁니다. 질문은 다지선다 형식을 사용합니다.
 
 ```markdown
 ## Question: Deployment model
@@ -71,65 +71,65 @@ X) Other (please describe after [Answer]: tag below)
 [Answer]: B
 ```
 
-A few things that work well when answering:
+답변할 때 잘 작동하는 몇 가지 방식:
 
-- **Add a label alongside the letter.** `C — financial summary and debt service coverage` is clearer than just `C`.
-- **Include a brief justification.** `A — design-first; generate the OpenAPI spec before writing code` confirms intent and gives the AI context it carries forward.
-- **Combine options when you mean both.** `B and C — rate limiting at both API Gateway level and application level (not D)` is unambiguous.
-- **Add a caveat when the option is almost right.** `B — migration is a separate project; however, include a one-time migration into the new data structures.`
-- **Use X freely.** If none of the options fit, X is the right choice over forcing a wrong answer.
+- **글자 옆에 레이블을 붙이세요.** `C — financial summary and debt service coverage`가 단순히 `C`보다 명확합니다.
+- **간단한 정당화를 포함하세요.** `A — design-first; generate the OpenAPI spec before writing code`는 의도를 확인하고 AI가 이후 단계로 가져갈 컨텍스트를 제공합니다.
+- **둘 다를 의미할 때는 옵션을 조합하세요.** `B and C — rate limiting at both API Gateway level and application level (not D)`는 모호하지 않습니다.
+- **옵션이 거의 맞지만 단서를 더해야 할 때는 단서를 다세요.** `B — migration is a separate project; however, include a one-time migration into the new data structures.`
+- **X를 자유롭게 사용하세요.** 어떤 옵션도 맞지 않으면, 잘못된 답을 강요하기보다 X가 올바른 선택입니다.
 
-**Step 3 — Tell the AI your answers are ready**
+**Step 3 — 답변이 준비되었다고 AI에게 알립니다**
 
-Return to the chat and say: "We have answered your clarification questions. Please re-read the file and proceed."
+채팅으로 돌아가서 말합니다: "We have answered your clarification questions. Please re-read the file and proceed."
 
-Tip: explicitly asking the AI to *re-read* the file ensures it loads your answers from disk rather than relying on an in-memory version that may not reflect your latest edits.
+Tip: AI에게 명시적으로 파일을 *다시 읽도록(re-read)* 요청하면 메모리에 있는 (당신의 최신 편집을 반영하지 않을 수 있는) 버전 대신 디스크에서 답변을 로드하도록 보장합니다.
 
-**Step 4 — AIDLC validates and proceeds**
+**Step 4 — AIDLC가 검증하고 진행합니다**
 
-The AI reads your answers, flags any remaining ambiguities, and proceeds to generate the next artifact.
+AI는 당신의 답변을 읽고, 남아 있는 모호함을 표시하고, 다음 아티팩트를 생성하기 위해 진행합니다.
 
-> **Advanced tip**: If you have documentation that answers some of the AI's questions, you can instruct it to resolve those itself: "Analyze the rationale for each question. If a question has already been answered through the provided documentation, answer it yourself. Only ask me if it is still unclear." This reduces unnecessary back-and-forth at gate points.
+> **고급 팁**: AI의 질문 일부에 답하는 문서가 있다면, AI가 스스로 해결하도록 지시할 수 있습니다: "Analyze the rationale for each question. If a question has already been answered through the provided documentation, answer it yourself. Only ask me if it is still unclear." 이는 게이트 지점에서 불필요한 왕복을 줄여줍니다.
 
-**Approval gates**
+**승인 게이트**
 
-At the end of each stage, AIDLC presents a completion message with two options:
+각 스테이지가 끝날 때 AIDLC는 두 가지 옵션과 함께 완료 메시지를 제시합니다.
 
-- **Request Changes** — ask for modifications before moving on
-- **Approve and Continue** — accept the output and advance
+- **Request Changes** — 진행하기 전에 수정 요청
+- **Approve and Continue** — 출력을 수락하고 진행
 
-Read the generated artifact before approving. Discuss with your team if needed. Only approve when you're satisfied.
+승인 전에 생성된 아티팩트를 읽으세요. 필요하면 팀과 논의하세요. 만족할 때만 승인하세요.
 
 ---
 
-### Context Management
+### 컨텍스트 관리
 
-Context is the AI's working memory for the session. AIDLC depends on having the full chain of artifacts and instructions in context to generate consistent downstream outputs. Managing it well is one of the highest-leverage habits you can develop.
+컨텍스트는 세션 동안 AI의 작업 메모리입니다. AIDLC는 일관된 다운스트림 출력을 생성하기 위해 아티팩트와 지시의 전체 체인을 컨텍스트에 가지고 있는 것에 의존합니다. 이를 잘 관리하는 것은 당신이 개발할 수 있는 가장 레버리지가 높은 습관 중 하나입니다.
 
-**The core rule: clear the context at every natural decision point.**
+**핵심 룰: 모든 자연스러운 결정 지점에서 컨텍스트를 클리어하라.**
 
-AIDLC is built around gates — moments where the AI stops and asks you something: a question file to answer, a document to approve, a plan to review. These pauses are not just approval checkpoints. They are the right moments to start a fresh context before continuing.
+AIDLC는 게이트를 중심으로 만들어졌습니다 — AI가 멈추고 당신에게 무언가(답변할 질문 파일, 승인할 문서, 검토할 plan)를 물어보는 순간들. 이러한 일시 정지는 단순한 승인 체크포인트가 아닙니다. 진행하기 전에 새 컨텍스트를 시작하기에 올바른 순간입니다.
 
-Clearing context at a gate is low-risk because the AI's current work is already saved to files. The next context starts clean, loads the relevant artifacts from disk, and proceeds without carrying accumulated noise from all the earlier steps.
+게이트에서 컨텍스트를 클리어하는 것은 위험이 낮습니다. AI의 현재 작업이 이미 파일에 저장되어 있기 때문입니다. 다음 컨텍스트는 깨끗하게 시작하여 디스크에서 관련 아티팩트를 로드하고, 이전의 모든 단계에서 누적된 노이즈를 가지고 가지 않습니다.
 
-If you let context accumulate across multiple gates, the AI starts working from a compressed or partially lost version of earlier instructions and artifacts. Output quality degrades in ways that are subtle and hard to diagnose.
+여러 게이트에 걸쳐 컨텍스트가 누적되도록 두면, AI는 이전 지시와 아티팩트의 압축되거나 부분적으로 손실된 버전에서 작업하게 됩니다. 출력 품질이 미묘하고 진단하기 어려운 방식으로 저하됩니다.
 
-**In practice:**
+**실전 가이드:**
 
-- When the AI asks you to answer a question file — answer the questions, then **start a fresh context** and tell the AI to re-read the file and continue
-- When the AI presents a document for approval — review it, then **start a fresh context** to either request changes or approve and proceed
-- If your tool offers a "compact context" prompt mid-workflow, **always decline it** — compaction is not the same as a clean reset and loses more than it saves
+- AI가 질문 파일에 답변하라고 요청하면 — 질문에 답한 뒤 **새 컨텍스트를 시작**하고 파일을 다시 읽고 계속하라고 AI에게 알리세요
+- AI가 승인을 위해 문서를 제시하면 — 검토한 뒤 변경을 요청하거나 승인하고 진행하기 위해 **새 컨텍스트를 시작**하세요
+- 도구가 워크플로우 중간에 "compact context" 프롬프트를 제공하면, **항상 거부하세요** — 압축(compaction)은 깨끗한 리셋과 같지 않으며 더 많은 것을 잃습니다
 
-**How to resume after a context reset:**
+**컨텍스트 리셋 후 재개하는 방법:**
 
-Option 1 — State file method (recommended):
+옵션 1 — 상태 파일 방식 (권장):
 
 ```text
 Go to aidlc-docs/aidlc-state.md, find the first unchecked item,
 then go to the corresponding plan file and resume from that point.
 ```
 
-Option 2 — Manual handoff:
+옵션 2 — 수동 핸드오프:
 
 ```text
 I am resuming a previously stopped conversation. Here is the context:
@@ -137,7 +137,7 @@ I am resuming a previously stopped conversation. Here is the context:
 Please continue with [next action or section X].
 ```
 
-> **Tip**: Commit and push all current changes to the repository whenever you reset context. It takes seconds and means you always have a clean recovery point.
+> **Tip**: 컨텍스트를 리셋할 때마다 현재 변경 사항을 저장소에 커밋하고 푸시하세요. 몇 초밖에 걸리지 않으며 항상 깨끗한 복구 지점을 확보할 수 있습니다.
 
 ```text
 Please commit and push all current changes to the repository.
@@ -145,21 +145,21 @@ Please commit and push all current changes to the repository.
 
 ---
 
-### Batching Prompts
+### 프롬프트 배칭(Batching)
 
-Not all prompts should be sent separately. A simple rule from workshop experience:
+모든 프롬프트를 따로 보내야 하는 것은 아닙니다. 워크숍 경험에서 나온 단순한 룰:
 
-**When two changes are tightly coupled to the same subject, include both in one prompt. When two changes are unrelated, do them one at a time.**
+**같은 주제에 단단히 결합된 두 변경은 하나의 프롬프트에 포함하세요. 두 변경이 무관하다면 한 번에 하나씩 하세요.**
 
-Over-batching (combining unrelated changes) causes the AI to lose focus and miss details. Under-batching (separate prompts for closely related things) adds unnecessary round-trips. When in doubt, err on the side of separating.
+과도한 배칭(무관한 변경 결합)은 AI가 초점을 잃고 세부 사항을 놓치게 만듭니다. 부족한 배칭(밀접하게 관련된 것들에 대해 별도 프롬프트)은 불필요한 왕복을 늘립니다. 의심스러우면 분리하는 쪽으로 기우세요.
 
 ---
 
-### Loading External Reference Files
+### 외부 참조 파일 로딩
 
-You can point AIDLC to any existing document — a schema, an architecture diagram, a data dictionary, an API spec — and it will incorporate that content into the current stage.
+스키마, 아키텍처 다이어그램, 데이터 사전, API 스펙 등 기존 문서를 AIDLC에 가리키면, AIDLC는 그 내용을 현재 스테이지에 통합합니다.
 
-**Basic pattern:**
+**기본 패턴:**
 
 ```text
 Please read [file path or description]. Use it as the basis for [what you want].
@@ -171,28 +171,28 @@ and reference it for this service. When we proceed, expect new requirements and
 stories related to this service.
 ```
 
-> **Advanced tip**: You can load documents at any stage, not just at the start. If a new constraint surfaces during Construction — an updated security policy, a revised data model — load it and ask AIDLC to assess the impact before proceeding.
+> **고급 팁**: 시작 시점뿐만 아니라 어떤 스테이지에서든 문서를 로드할 수 있습니다. Construction 중에 새 제약(업데이트된 보안 정책, 수정된 데이터 모델)이 등장하면, 로드하고 진행 전에 영향 평가를 AIDLC에 요청하세요.
 >
-> **Advanced tip — Enterprise standards as extensions**: If your organization has security, compliance, or API guidelines that should apply to every project, add them as a markdown steering file in `aidlc-rules/extensions/`. AIDLC will automatically load them into every phase without requiring manual injection.
+> **고급 팁 — 익스텐션으로서의 엔터프라이즈 표준**: 조직에 모든 프로젝트에 적용되어야 하는 보안, 컴플라이언스, API 가이드라인이 있다면, `aidlc-rules/extensions/`에 마크다운 스티어링 파일로 추가하세요. AIDLC가 수동 주입 없이 모든 단계에 자동으로 로드합니다.
 
 ---
 
-### Getting Independent Critiques
+### 독립적인 비평(Critique) 받기
 
-AIDLC will defend its own prior decisions. When you want an unbiased evaluation of an artifact, ask for a critique in a **fresh context** — one where the AI has no memory of why it made those decisions.
+AIDLC는 자신의 이전 결정을 옹호합니다. 아티팩트에 대한 편향 없는 평가를 원할 때는 **새 컨텍스트**에서 비평을 요청하세요 — AI가 왜 그 결정을 내렸는지에 대한 기억이 없는 컨텍스트.
 
 ```text
 Produce a critique document of [the requirements document / the component design].
 Do this in a new context separate from everything else.
 ```
 
-This produces more useful, objective feedback than asking for a critique in the same session where the artifact was created.
+이는 아티팩트가 생성된 동일 세션에서 비평을 요청하는 것보다 더 유용하고 객관적인 피드백을 만들어냅니다.
 
 ---
 
-### Depth Levels
+### 깊이 레벨(Depth Levels)
 
-AIDLC adapts how deeply it executes each stage based on the complexity of your request. You can influence this.
+AIDLC는 요청의 복잡도에 따라 각 스테이지를 얼마나 깊이 실행할지 조정합니다. 당신이 이에 영향을 줄 수 있습니다.
 
 ```text
 Keep this at minimal depth — we just need the basic structure documented.
@@ -206,76 +206,76 @@ This is a production-critical component. Please run at comprehensive depth.
 
 ## 2. Inception Phase
 
-The Inception phase is where you and the AI align on *what to build and why* before any design or code work begins. The more context you bring in here, the fewer clarifying questions and the less rework you'll encounter in Construction.
+Inception 단계는 설계나 코드 작업이 시작되기 전에 당신과 AI가 *무엇을, 왜 만들지*를 정렬하는 단계입니다. 여기서 더 많은 컨텍스트를 가져올수록 Construction에서 마주칠 명확화 질문과 재작업이 줄어듭니다.
 
-### Prepare Your Inputs Before Starting
+### 시작 전에 입력 자료를 준비하라
 
-The single most effective thing you can do before kicking off AIDLC is prepare two documents:
+AIDLC를 시작하기 전에 할 수 있는 가장 효과적인 한 가지는 두 개의 문서를 준비하는 것입니다.
 
-1. **Vision Document** — what to build and why
-2. **Technical Environment Document** — what tools and constraints apply
+1. **Vision Document(비전 문서)** — 무엇을 왜 만들 것인가
+2. **Technical Environment Document(기술 환경 문서)** — 어떤 도구와 제약이 적용되는가
 
-These documents dramatically reduce the number of clarifying questions AIDLC will ask and ensure the AI starts from your team's actual context rather than making assumptions.
+이 문서들은 AIDLC가 던질 명확화 질문의 수를 극적으로 줄여주고, AI가 가정을 만들기보다 팀의 실제 컨텍스트에서 시작하도록 보장합니다.
 
-**Where to start:**
+**어디서 시작할까:**
 
-- [writing-inputs/inputs-quickstart.md](writing-inputs/inputs-quickstart.md) — quick summary for both greenfield and brownfield
-- [writing-inputs/vision-document-guide.md](writing-inputs/vision-document-guide.md) — full vision guide with templates
-- [writing-inputs/technical-environment-guide.md](writing-inputs/technical-environment-guide.md) — full technical environment guide with templates
+- [writing-inputs/inputs-quickstart.md](writing-inputs/inputs-quickstart.md) — 그린필드와 브라운필드 모두에 대한 빠른 요약
+- [writing-inputs/vision-document-guide.md](writing-inputs/vision-document-guide.md) — 템플릿을 포함한 전체 비전 가이드
+- [writing-inputs/technical-environment-guide.md](writing-inputs/technical-environment-guide.md) — 템플릿을 포함한 전체 기술 환경 가이드
 
-**Brownfield projects** (adding to an existing codebase) need slightly different inputs. The vision doc needs a current state description and an explicit list of what must not change. The technical environment doc should describe the existing stack rather than a desired one, and example code should come from actual existing files. See [writing-inputs/inputs-quickstart.md](writing-inputs/inputs-quickstart.md) for the brownfield minimum and worked examples.
+**브라운필드 프로젝트** (기존 코드베이스에 추가)는 약간 다른 입력 자료가 필요합니다. 비전 문서는 현재 상태 설명과 변경되지 말아야 할 것들의 명시적인 리스트가 필요합니다. 기술 환경 문서는 원하는 스택이 아닌 기존 스택을 설명해야 하며, 예제 코드는 실제 기존 파일에서 가져와야 합니다. 브라운필드 최소 입력과 작업 예제는 [writing-inputs/inputs-quickstart.md](writing-inputs/inputs-quickstart.md)를 참고하세요.
 
-**Minimum viable input** if you want to start quickly:
+빠르게 시작하고 싶다면 **최소 입력**:
 
-For the Vision: one paragraph describing what you're building and for whom, a list of MVP features in scope, a list of features explicitly out of scope, and any open questions — things you already know are uncertain. Open questions feed directly into Requirements Analysis as pre-declared ambiguities, so they get resolved early rather than surfacing as surprises mid-design.
+비전의 경우: 무엇을 누구를 위해 만들고 있는지 설명하는 한 단락, 스코프에 있는 MVP 기능 리스트, 명시적으로 스코프 밖인 기능 리스트, 그리고 — 당신이 이미 불확실하다고 알고 있는 — 미해결 질문(open questions). 미해결 질문은 사전 선언된 모호함으로서 Requirements Analysis에 직접 공급되어, 설계 중간에 깜짝 등장하기보다 일찍 해결됩니다.
 
-For the Technical Environment: language and version, package manager, web framework, cloud provider and deployment model, test framework, a prohibited libraries table (with reason and recommended alternative for each entry), security basics, and at least one example each for a typical endpoint, function, and test.
+기술 환경의 경우: 언어와 버전, 패키지 매니저, 웹 프레임워크, 클라우드 제공자와 배포 모델, 테스트 프레임워크, 금지된 라이브러리 테이블(각 항목에 대해 이유와 권장 대안), 보안 기본 사항, 그리고 전형적인 엔드포인트/함수/테스트 각각에 대한 최소 하나의 예제.
 
-The prohibited libraries table matters more than a plain list — the reason and alternative columns tell AI-DLC *why* a library is banned, which leads to better substitution decisions. The example code patterns are the single highest-leverage addition beyond the basics: they give AI-DLC a concrete pattern to follow during code generation rather than inventing its own.
+금지된 라이브러리 테이블은 단순 리스트보다 중요합니다 — 이유와 대안 컬럼은 *왜* 라이브러리가 금지되었는지를 AI-DLC에 알려주어 더 나은 치환 결정을 이끌어냅니다. 예제 코드 패턴은 기본 사항을 넘어 단일로 가장 레버리지가 높은 추가입니다. 코드 생성 중에 AI-DLC가 자체적으로 발명하지 않고 따라야 할 구체적인 패턴을 제공합니다.
 
-> **Tip**: Every gap you fill in up front is one fewer clarifying question during Requirements Analysis.
+> **Tip**: 사전에 채워 넣는 모든 빈틈은 Requirements Analysis 동안 하나 덜 받게 될 명확화 질문입니다.
 
 ---
 
-### Kicking Off a New Project
+### 새 프로젝트 시작하기(Kicking Off)
 
-Once your input documents are ready:
+입력 문서가 준비되면:
 
 ```text
 I want to start a new project. Please read [path to vision document] and
 [path to technical environment document], then begin the AIDLC workflow.
 ```
 
-AIDLC will scan the workspace, determine greenfield vs. brownfield, and proceed into Requirements Analysis using your documents as the primary source — asking only for what they don't cover.
+AIDLC는 워크스페이스를 스캔하고, 그린필드인지 브라운필드인지 판단한 후, 당신의 문서를 주 소스로 사용하여 Requirements Analysis로 진행합니다 — 그 문서들이 다루지 않는 것에 대해서만 질문합니다.
 
-For a brownfield project, AIDLC will first run Reverse Engineering, analyzing your existing codebase and producing architecture, component, and API documentation. Review these artifacts carefully — they become the foundation for everything that follows.
-
----
-
-### Answering Requirements Questions
-
-See the answering tips in [Section 1](#the-question--doc--approval-flow) for the full guidance on using letters, adding labels, combining options, and using X for custom answers. A few additional points specific to Requirements Analysis:
-
-- **Separate the full vision from the MVP explicitly.** If AIDLC asks what features to include, name them. If something is out of scope, say so — don't leave it ambiguous.
-- **State deliberate "no" decisions clearly.** `D — no caching required at this time` signals intent. An empty answer invites the AI to make a speculative choice.
-- **Describe phased approaches inline.** `X — simple role-based workflow now; replace with external workflow engine when available` lets AIDLC design the current solution with the right extension points.
-
-> **Advanced tip — Security Extensions**: During Requirements Analysis, AIDLC will ask whether you want to enforce security extension rules. For production-grade applications, choose Yes. For prototypes, No is fine. This decision is recorded and enforced throughout Construction, so choose deliberately.
+브라운필드 프로젝트의 경우, AIDLC는 먼저 Reverse Engineering을 실행하여 기존 코드베이스를 분석하고 아키텍처, 컴포넌트, API 문서를 생성합니다. 이 아티팩트들을 신중하게 검토하세요 — 이후 모든 것의 기반이 됩니다.
 
 ---
 
-### Inception-Specific Interactions
+### Requirements 질문에 답하기
 
-**Deferring a feature mid-stream:**
+글자 사용, 레이블 추가, 옵션 조합, X로 커스텀 답변하기에 대한 전체 가이드는 [Section 1](#the-question--doc--approval-flow)의 답변 팁을 참고하세요. Requirements Analysis에만 해당하는 몇 가지 추가 사항:
+
+- **전체 비전과 MVP를 명시적으로 분리하세요.** AIDLC가 어떤 기능을 포함할지 물으면 명명하세요. 무언가가 스코프 밖이라면 그렇게 말하세요 — 모호하게 두지 마세요.
+- **의도적인 "아니오" 결정을 분명히 명시하세요.** `D — no caching required at this time`는 의도를 전달합니다. 빈 답변은 AI가 추측성 선택을 하도록 초대합니다.
+- **단계적 접근(phased approaches)을 인라인으로 설명하세요.** `X — simple role-based workflow now; replace with external workflow engine when available`는 AIDLC가 올바른 확장 지점을 가진 현재 솔루션을 설계하도록 해줍니다.
+
+> **고급 팁 — 보안 익스텐션**: Requirements Analysis 동안 AIDLC는 보안 익스텐션 룰을 강제할지 묻습니다. 프로덕션급 애플리케이션이라면 Yes를 선택하세요. 프로토타입이라면 No도 괜찮습니다. 이 결정은 기록되고 Construction 전체에 강제되므로, 의도적으로 선택하세요.
+
+---
+
+### Inception 단계에서의 상호작용 패턴
+
+**진행 중 기능 연기하기:**
 
 ```text
 We are going to backlog the [feature name] capability for the current release.
 Please remove it from the component design and flag the related user stories as backlogged.
 ```
 
-Backlogging (rather than deleting) preserves the work for future iterations without it influencing the current build.
+백로깅(삭제가 아님)은 작업을 향후 이터레이션을 위해 보존하면서 현재 빌드에 영향을 주지 않도록 합니다.
 
-**Registering an existing data structure:**
+**기존 데이터 구조 등록하기:**
 
 ```text
 We have an existing [schema/structure name]. Please add it to the inception documents
@@ -283,7 +283,7 @@ and reference it for this service. When we proceed, expect new requirements and
 stories related to this service.
 ```
 
-**Making implicit data sources explicit:**
+**암묵적인 데이터 소스를 명시적으로 만들기:**
 
 ```text
 For the [service name], add the understanding that [new data source] is also a
@@ -291,20 +291,20 @@ data source for this feature, in addition to [existing data source]. Then review
 requirements and user stories to ensure this is captured.
 ```
 
-**Checking for upstream impact after a design change:**
+**설계 변경 후 업스트림 영향 확인:**
 
-After any meaningful change to a design artifact, ask AIDLC to check whether earlier documents are still consistent:
+설계 아티팩트의 의미 있는 변경 후, 이전 문서들이 여전히 일관성 있는지 AIDLC에게 확인하라고 요청하세요.
 
 ```text
 Now review the previous steps — user stories and requirements — to ensure
 this change does not require updates to any of those documents.
 ```
 
-> **Advanced tip — Standing back-propagation rule**: Instead of asking after each change, set this as a standing instruction at the start of a phase: "Every time you update a document, check whether the change impacts the requirements document and user stories, and prompt me if it does." This creates an automatic safety net without requiring you to remember.
+> **고급 팁 — 상시(standing) 역전파 룰**: 각 변경 후마다 묻기보다 단계 시작에서 상시 지시로 설정하세요: "Every time you update a document, check whether the change impacts the requirements document and user stories, and prompt me if it does." 이는 당신이 기억할 필요 없이 자동 안전망을 만들어 줍니다.
 
-**Parallel team review of component design:**
+**컴포넌트 설계의 병렬 팀 리뷰:**
 
-If your team splits up to review different components simultaneously:
+팀이 분리되어 여러 컴포넌트를 동시에 리뷰한다면:
 
 ```text
 Restrict your edits to the files under your team's control. When all teams are done,
@@ -312,7 +312,7 @@ we will ask the AI to review all changes and confirm there are no conflicts.
 Then we will ask it to review impacts to user stories and requirements.
 ```
 
-When everyone is done, trigger the conflict check:
+모두 끝나면 충돌 확인을 트리거하세요.
 
 ```text
 We had [N] independent groups editing component design files. Please review all files
@@ -320,7 +320,7 @@ and report any conflicts or inconsistencies. Do not edit the files — produce a
 for our review.
 ```
 
-Resolve each conflict explicitly by number:
+각 충돌을 번호로 명시적으로 해결하세요.
 
 ```text
 For conflict #[number] ([conflict description]):
@@ -333,18 +333,18 @@ this capability is backlogged. Update the documentation to clearly mark it as
 backlogged so code generation does not attempt to implement it.
 ```
 
-**Archiving stale design files:**
+**오래된 설계 파일 아카이빙:**
 
-If exploration during design produced files that are no longer needed:
+설계 중 탐색으로 더 이상 필요 없는 파일이 생긴 경우:
 
 ```text
 Move the [file descriptions] to an archive folder — do not delete them.
 Then confirm whether they are required for code generation.
 ```
 
-> **Advanced tip — Component size constraints**: If you want to prevent oversized components that would be too large to implement in a single sprint, set a story-point cap during Application Design: "At the component design phase, inject the following instruction: no single component should have more than [X] aggregate story points. If a component exceeds this limit, break it down into smaller sub-components."
+> **고급 팁 — 컴포넌트 크기 제약**: 단일 스프린트에서 구현하기에 너무 큰 컴포넌트를 막고 싶다면, Application Design 동안 story-point 캡을 설정하세요: "At the component design phase, inject the following instruction: no single component should have more than [X] aggregate story points. If a component exceeds this limit, break it down into smaller sub-components."
 >
-> **Advanced tip — Context resets mid-phase**: If your session gets interrupted, use this to re-establish state:
+> **고급 팁 — 단계 중간의 컨텍스트 리셋**: 세션이 중단되면 다음으로 상태를 재확립하세요.
 >
 > ```text
 > Stop. New context. We just completed [description of recent work].
@@ -356,24 +356,24 @@ Then confirm whether they are required for code generation.
 
 ## 3. Construction Phase
 
-The Construction phase is where designs become code. Each unit of work goes through a series of design stages (conditional) followed by Code Generation (always). After all units are complete, Build and Test closes out the work.
+Construction 단계는 설계가 코드가 되는 곳입니다. 각 unit of work는 일련의 (조건부) 설계 스테이지를 거친 후 Code Generation(항상)을 거칩니다. 모든 유닛이 완료된 후 Build and Test가 작업을 마무리합니다.
 
-### The Design Review Process
+### 설계 리뷰 프로세스
 
-For each unit of work, AIDLC may execute some or all of these design stages before generating code:
+각 unit of work에 대해 AIDLC는 코드를 생성하기 전에 다음 설계 스테이지의 일부 또는 전체를 실행할 수 있습니다.
 
-- **Functional Design** — business logic, domain models, data schemas
-- **NFR Requirements** — performance, security, scalability, tech stack selection
-- **NFR Design** — applying NFR patterns to the design
-- **Infrastructure Design** — mapping the design to actual cloud services
+- **Functional Design** — 비즈니스 로직, 도메인 모델, 데이터 스키마
+- **NFR Requirements** — 성능, 보안, 확장성, 기술 스택 선택
+- **NFR Design** — 설계에 NFR 패턴 적용
+- **Infrastructure Design** — 설계를 실제 클라우드 서비스로 매핑
 
-Each stage produces a document in `aidlc-docs/construction/{unit-name}/`. Your job at each gate is to read the document and decide: request changes or approve.
+각 스테이지는 `aidlc-docs/construction/{unit-name}/`에 문서를 생성합니다. 각 게이트에서 당신의 일은 문서를 읽고 결정하는 것입니다: 변경 요청 또는 승인.
 
-**Read before you approve.** The design documents are the source of truth for code generation. Mistakes that slip through here are harder to fix later.
+**승인하기 전에 읽으세요.** 설계 문서는 코드 생성의 source of truth입니다. 여기서 빠져나간 실수는 나중에 고치기 더 어렵습니다.
 
-**Advancing from design to code:**
+**설계에서 코드로 진행하기:**
 
-When you're ready to transition to Code Generation, give the AI the structural context it needs up front:
+Code Generation으로 전환할 준비가 되면, AI에게 사전에 필요한 구조적 컨텍스트를 제공하세요.
 
 ```text
 We have completed component design review. We are ready for code creation.
@@ -383,59 +383,59 @@ Use this pattern for APIs. For the UI, follow the [Vue.js composables/components
 directory structure. Please ask any questions you have before proceeding.
 ```
 
-Inviting questions before generation starts resolves ambiguities in the plan rather than in the middle of file creation.
+생성 시작 전에 질문을 초대하면 파일 생성 중간이 아닌 plan 단계에서 모호함이 해결됩니다.
 
-**Requesting a targeted correction:**
+**타겟된 수정 요청:**
 
-Be precise — name the element, what is wrong, and what it should be:
+명확하게 — 요소, 무엇이 잘못되었는지, 어떻게 되어야 하는지를 명명하세요.
 
 ```text
 The [endpoint description] should use [correct parameter], not [incorrect parameter].
 Please update the [component name] accordingly.
 ```
 
-**Choosing between AI-presented options:**
+**AI가 제시한 옵션 중에서 선택:**
 
 ```text
 Please implement Option B — [option description] — for [feature name].
 Update all component design documents accordingly.
 ```
 
-Reference the option by letter *and* description, and explicitly scope the update to all affected documents, not just the one where the question arose.
+옵션을 글자 *와* 설명으로 참조하고, 업데이트 범위를 질문이 발생한 문서뿐만 아니라 영향받는 모든 문서로 명시적으로 지정하세요.
 
-**Overriding a design pattern:**
+**디자인 패턴 오버라이드:**
 
 ```text
 We prefer to deviate from [standard pattern] and use [our preferred approach]
 to allow [rationale]. Please update the component design documents accordingly.
 ```
 
-The rationale matters. AIDLC carries it forward into later stages, which prevents the deviation from being silently reversed.
+근거가 중요합니다. AIDLC는 이를 이후 스테이지로 가지고 가서 일탈이 조용히 되돌아가는 것을 막아줍니다.
 
-> **Advanced tip — Impact assessment before committing**: For any significant design change, assess before acting:
+> **고급 팁 — 커밋 전 영향 평가**: 의미 있는 설계 변경에 대해서는 행동하기 전에 평가하세요.
 >
 > ```text
 > Do not change anything. Assess the impact of [proposed change].
 > [Describe the proposed change in detail.]
 > ```
 >
-> **Advanced tip — Inline code documentation**: If you want inline documentation applied consistently to every unit, add it as a standing rule at the start of the Construction phase rather than repeating it per unit: "Add inline code documentation as a standard rule for the construction phase."
+> **고급 팁 — 인라인 코드 문서화**: 모든 유닛에 일관되게 인라인 문서화를 적용하고 싶다면, 유닛별로 반복하기보다 Construction 단계 시작에서 상시 룰로 추가하세요: "Add inline code documentation as a standard rule for the construction phase."
 
 ---
 
-### The Code Generation Process
+### Code Generation 프로세스
 
-Code Generation has two distinct parts. Both require your explicit approval.
+Code Generation은 뚜렷한 두 부분으로 구성됩니다. 둘 다 명시적인 승인이 필요합니다.
 
-**Part 1 — Planning**
+**Part 1 — 계획 수립(Planning)**
 
-AIDLC creates a numbered, checkbox-tracked plan of every file to be created or modified. Review this plan before approving. Check that:
+AIDLC는 생성 또는 수정될 모든 파일에 대해 번호 매겨지고 체크박스로 추적되는 plan을 만듭니다. 승인하기 전에 이 plan을 검토하세요. 다음을 확인하세요.
 
-- Every file is in the right location (application code in the workspace root, never in `aidlc-docs/`)
-- The steps cover everything your design documents specified
-- Brownfield projects list existing files to modify, not new duplicates alongside them
+- 모든 파일이 올바른 위치에 있는지 (애플리케이션 코드는 워크스페이스 루트, 절대 `aidlc-docs/` 안이 아님)
+- 단계들이 설계 문서가 명시한 모든 것을 다루는지
+- 브라운필드 프로젝트는 새 중복을 옆에 두지 않고 수정할 기존 파일을 나열하는지
 
-> **Advanced tip — Internal libraries**: Before approving the plan, inject your internal library requirements into the Q&A file or implementation plan:
+> **고급 팁 — 내부 라이브러리**: plan을 승인하기 전에 Q&A 파일이나 구현 plan에 내부 라이브러리 요구사항을 주입하세요.
 >
 > ```text
 > In addition to my answers, you must use the following libraries from our
@@ -443,21 +443,21 @@ AIDLC creates a numbered, checkbox-tracked plan of every file to be created or m
 > Explain why and when each should be used, not just what it is.
 > ```
 >
-> A curated markdown guide to your internal libraries works better than pointing the AI at a repository. Create one and reference it as a code generation input.
+> 내부 라이브러리에 대한 큐레이팅된 마크다운 가이드가 AI에게 저장소를 가리키는 것보다 더 잘 작동합니다. 하나를 만들고 코드 생성 입력으로 참조하세요.
 >
-> **Advanced tip — UI from Figma designs**: Take a screenshot of your Figma design, pass it to a vision-capable model (e.g. ChatGPT) to generate framework code from the screenshot, then provide that output to AIDLC as the UI implementation input. This produces a concrete, tool-readable specification rather than a raw design-tool export.
+> **고급 팁 — Figma 디자인에서 UI 생성**: Figma 디자인의 스크린샷을 찍어 비전 가능 모델(예: ChatGPT)에 전달하여 스크린샷에서 프레임워크 코드를 생성한 다음, 그 출력을 UI 구현 입력으로 AIDLC에 제공하세요. 이는 원시 디자인 도구 export보다 구체적이고 도구가 읽을 수 있는 명세를 만들어냅니다.
 
-**Part 2 — Generation**
+**Part 2 — 생성(Generation)**
 
-AIDLC executes each step sequentially, checking off each step as it completes. When all steps are done, it presents the completion message with paths to generated files.
+AIDLC는 각 단계를 순차적으로 실행하며 각 단계가 완료되면 체크오프합니다. 모든 단계가 끝나면 생성된 파일 경로와 함께 완료 메시지를 제시합니다.
 
-Review the generated code before approving. If something isn't right:
+승인하기 전에 생성된 코드를 검토하세요. 무언가가 맞지 않으면:
 
 ```text
 Request Changes: [describe specifically what needs to change]
 ```
 
-> **Advanced tip — Brownfield file modifications**: For existing codebases, AIDLC modifies files in place. If you see `ClassName_modified.java` or `service_new.ts` alongside the original, flag it immediately:
+> **고급 팁 — 브라운필드 파일 수정**: 기존 코드베이스의 경우 AIDLC는 파일을 제자리에서 수정합니다. 원본 옆에 `ClassName_modified.java`나 `service_new.ts`가 보이면 즉시 표시하세요.
 >
 > ```text
 > I see [ClassName_modified.java] alongside [ClassName.java]. Please merge the changes
@@ -468,11 +468,11 @@ Request Changes: [describe specifically what needs to change]
 
 ### Build and Test
 
-After all units are complete, AIDLC generates build and test instructions for all units. A few patterns worth knowing:
+모든 유닛이 완료되면 AIDLC가 모든 유닛에 대한 빌드 및 테스트 지침을 생성합니다. 알아두면 좋은 몇 가지 패턴.
 
-**Injecting test tooling at the right moment:**
+**적시(just-in-time)에 테스트 도구 주입:**
 
-Don't add test framework or test management system instructions at project start. By the time code generation begins, those details may have been compressed or lost across many intervening stages. Inject them just-in-time:
+프로젝트 시작에 테스트 프레임워크나 테스트 관리 시스템 지침을 추가하지 마세요. 코드 생성이 시작될 때쯤이면 그 세부 사항들이 사이의 많은 스테이지를 거치며 압축되거나 손실되었을 수 있습니다. 적시에 주입하세요.
 
 ```text
 At the functional test generation step, inject the following instruction:
@@ -481,9 +481,9 @@ in this document: [attach specification]. Use this API endpoint to push the
 generated test cases to the [test management system] repository: [endpoint details].
 ```
 
-This principle applies to any tool-specific instruction: inject it at the phase where it's needed, not at project start.
+이 원칙은 모든 도구 특정 지침에 적용됩니다 — 프로젝트 시작이 아니라 필요한 단계에 주입하세요.
 
-**Scoping unit test coverage:**
+**유닛 테스트 커버리지 범위 지정:**
 
 ```text
 When generating unit tests, exclude third-party external dependencies from
@@ -493,9 +493,9 @@ code paths only.
 
 ---
 
-### After Code Generation: Back-Propagating Changes
+### Code Generation 후: 변경 사항 역전파
 
-Changes made during code generation — small design decisions, adjustments discovered while writing code — need to flow back up to the design documents. Do this as a deliberate sweep after code polish is complete, not ad hoc:
+코드 생성 중에 만들어진 변경 사항 — 작은 설계 결정, 코드 작성 중 발견된 조정 — 은 설계 문서로 거꾸로 흘러야 합니다. ad hoc이 아니라 코드 폴리시가 완료된 후 의도적인 sweep으로 수행하세요.
 
 ```text
 When you have finished polishing the code, review each unit's final design files
@@ -503,9 +503,9 @@ and propagate any changes back up the chain to requirements and user stories.
 Make a plan for how to do this step by step before executing.
 ```
 
-Asking for a plan before execution ensures the sweep is systematic across all units rather than selective.
+실행 전에 plan을 요청하면 sweep이 선택적이지 않고 모든 유닛에 걸쳐 체계적이도록 보장합니다.
 
-> **Advanced tip — Extracting reusable specs**: At the end of a completed project, extract the patterns you established into reusable specification documents for future projects:
+> **고급 팁 — 재사용 가능한 스펙 추출**: 완료된 프로젝트의 마지막에 당신이 정립한 패턴을 향후 프로젝트를 위한 재사용 가능한 명세 문서로 추출하세요.
 >
 > ```text
 > Create a set of reusable specification documents from the patterns expressed
@@ -519,30 +519,30 @@ Asking for a plan before execution ensures the sweep is systematic across all un
 
 ## 4. Never Vibe Code
 
-Vibe coding means directly editing generated code files to make quick fixes or try things out — bypassing the design documents entirely. It feels fast in the moment and creates problems shortly after.
+Vibe coding은 빠른 수정이나 시도를 위해 생성된 코드 파일을 직접 편집하는 것을 의미합니다 — 설계 문서를 완전히 우회합니다. 순간에는 빠르게 느껴지지만 곧 문제를 만듭니다.
 
-The issue isn't the edit itself. It's that the design documents — the source of truth AIDLC uses for every subsequent operation — no longer reflect what the code actually does. The next time AIDLC runs Code Generation for a related unit, or you resume a session, or a colleague picks up the work, the disconnect causes confusion and rework.
+문제는 편집 자체가 아닙니다. AIDLC가 모든 후속 작업에 사용하는 source of truth인 설계 문서가 더 이상 코드가 실제로 하는 일을 반영하지 않는다는 점입니다. AIDLC가 관련 유닛에 대해 다음번 Code Generation을 실행하거나, 세션을 재개하거나, 동료가 작업을 인계받을 때 이 불일치는 혼란과 재작업을 야기합니다.
 
-One team described it directly during workshops:
+한 팀이 워크숍에서 직접적으로 표현했습니다.
 
 > "You never fix code directly. If you discover an issue, go back to AIDLC and say: I have discovered issue X. Review the design and make a plan to fix it. If this affects the design, update it, then update the code."
 
-**The rule: update the design first, then generate the code.**
+**룰: 설계를 먼저 업데이트하고, 그다음에 코드를 생성한다.**
 
 ---
 
-### The Right Way to Make a Change
+### 변경을 올바르게 만드는 방법
 
-Whether you've spotted a bug, changed your mind about a design decision, or received new requirements, the flow is the same:
+버그를 발견했든, 설계 결정에 대해 마음을 바꿨든, 새 요구사항을 받았든, 플로우는 동일합니다.
 
-**Step 1 — Describe the issue without touching anything:**
+**Step 1 — 아무것도 건드리지 않고 이슈를 설명하기:**
 
 ```text
 Do not update any documents yet. I have discovered issue [X].
 Review the design and help me understand where this needs to be addressed.
 ```
 
-**Step 2 — Fix the design document:**
+**Step 2 — 설계 문서 수정:**
 
 ```text
 Please update [specific design document] to reflect [the fix].
@@ -550,35 +550,35 @@ Then check whether any upstream documents — requirements, user stories —
 also need to be updated.
 ```
 
-**Step 3 — Regenerate the affected code:**
+**Step 3 — 영향받는 코드 재생성:**
 
 ```text
 The design for [unit name] has been updated. Please re-run code generation
 for the affected files only.
 ```
 
-This flow takes a few extra minutes compared to directly editing a file. It keeps your documentation in sync, your audit trail complete, and your team aligned on what was actually built.
+이 플로우는 파일을 직접 편집하는 것에 비해 몇 분이 더 걸립니다. 그러나 문서를 동기화 상태로 유지하고, 감사 로그를 완전하게 유지하며, 팀이 실제로 만들어진 것에 대해 정렬된 상태를 유지하게 합니다.
 
 ---
 
-### When You're Tempted to "Just Edit the File"
+### "그냥 파일을 편집"하고 싶을 때
 
-**"It's just a one-line fix."**
+**"한 줄짜리 수정일 뿐이야."**
 
-One-line fixes that bypass the design still create drift. Note the fix in the relevant design document and let AIDLC apply it:
+설계를 우회하는 한 줄 수정도 여전히 드리프트를 만듭니다. 관련 설계 문서에 수정을 메모하고 AIDLC가 적용하게 하세요.
 
 ```text
 In [functional-design.md for unit X], update [method or rule] to [the fix].
 Then regenerate [the affected file].
 ```
 
-**"We're just exploring — nothing is final yet."**
+**"그냥 탐색 중이야 — 아직 확정된 건 없어."**
 
-Exploration is exactly what "Do not update any documents" is for. Explore freely in the chat. Commit only when you're ready.
+탐색은 정확히 "Do not update any documents"가 있는 이유입니다. 채팅에서 자유롭게 탐색하세요. 준비되었을 때만 커밋하세요.
 
-**"I need to unblock the team right now."**
+**"지금 당장 팀을 unblock해야 해."**
 
-Sometimes you have to move fast. If you make a direct edit, log it honestly so the audit trail stays accurate:
+때로는 빠르게 움직여야 합니다. 직접 편집을 하면, 감사 로그가 정확하게 유지되도록 정직하게 로깅하세요.
 
 ```text
 We made a temporary direct edit to [file] to unblock the team.
@@ -588,33 +588,33 @@ and verify no other documents are inconsistent.
 
 ---
 
-### Standing Rules That Prevent Drift
+### 드리프트를 막는 상시 룰
 
-Two standing instructions you can set at the start of a Construction phase that catch problems early, without requiring you to remember to ask each time:
+Construction 단계 시작에서 설정할 수 있는, 매번 묻는 것을 기억할 필요 없이 문제를 일찍 잡아주는 두 가지 상시 지시.
 
-**Back-propagation on every update:**
+**모든 업데이트에 대한 역전파:**
 
 ```text
 Every time you update a document, check whether the change impacts the
 requirements document and user stories, and prompt me if it does.
 ```
 
-**Design-first on every code decision:**
+**모든 코드 결정에 대한 design-first:**
 
 ```text
 When you make a design decision during code generation, always make sure
 the documentation reflects this change before proceeding.
 ```
 
-Set these once at the start of Construction and they apply for the entire phase.
+Construction 시작에 한 번 설정하면 단계 전체에 적용됩니다.
 
 ---
 
-### Keeping Reports Out of aidlc-docs
+### aidlc-docs 밖에 리포트 두기
 
-One practical note: if you ask AIDLC to produce human-facing reports — architecture diagrams, component summaries, stakeholder presentations — don't let it save them into `aidlc-docs/`. Those files will be loaded as artifacts in subsequent stages, inflating the token count and potentially confusing the AI about what is authoritative design input.
+실용적인 한 가지: AIDLC에 사람을 대상으로 한 리포트(아키텍처 다이어그램, 컴포넌트 요약, 스테이크홀더 프레젠테이션)를 생성하도록 요청한다면, `aidlc-docs/`에 저장되도록 두지 마세요. 그 파일들은 후속 스테이지에서 아티팩트로 로드되어 토큰 수를 부풀리고 무엇이 권위 있는 설계 입력인지에 대해 AI를 혼란스럽게 만들 수 있습니다.
 
-Use a separate `reports/` folder and, for cleaner output, generate reports in a fresh context with a dedicated report specification file:
+별도의 `reports/` 폴더를 사용하고, 더 깨끗한 출력을 원하면 전용 리포트 명세 파일을 가진 새 컨텍스트에서 리포트를 생성하세요.
 
 ```text
 Pause the process. Start a new context. Read [report specification markdown file]
@@ -624,4 +624,4 @@ Save the output to a reports/ folder, not aidlc-docs/.
 
 ---
 
-*For guides on preparing your input documents, see [writing-inputs/inputs-quickstart.md](writing-inputs/inputs-quickstart.md).*
+*입력 문서 작성에 대한 가이드는 [writing-inputs/inputs-quickstart.md](writing-inputs/inputs-quickstart.md)를 참고하세요.*

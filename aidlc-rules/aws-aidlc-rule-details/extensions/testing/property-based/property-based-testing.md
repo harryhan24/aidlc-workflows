@@ -1,284 +1,284 @@
-# Property-Based Testing Rules
+# 속성 기반 테스트(Property-Based Testing) 룰
 
-## Overview
+## 개요
 
-These property-based testing (PBT) rules are cross-cutting constraints that apply across applicable AI-DLC phases. They ensure that code with identifiable properties is tested using property-based techniques, complementing (not replacing) traditional example-based tests.
+본 속성 기반 테스트(property-based testing, PBT) 룰은 적용 가능한 AI-DLC 단계에 걸쳐 적용되는 횡단 제약입니다. 식별 가능한 속성(property)을 가진 코드가 속성 기반 기법으로 테스트되도록 보장하며, 기존의 예시 기반(example-based) 테스트를 대체하는 것이 아니라 보완합니다.
 
-Property-based testing defines invariants that must hold for all valid inputs, then uses a framework to generate random inputs and search for counterexamples. When a failure is found, the framework shrinks the input to a minimal reproducing case. This approach uncovers edge cases and subtle bugs that example-based testing routinely misses.
+속성 기반 테스트는 모든 유효한 입력에 대해 성립해야 하는 불변식(invariant)을 정의한 뒤, 프레임워크를 사용해 랜덤 입력을 생성하고 반례를 탐색합니다. 실패가 발견되면 프레임워크는 입력을 최소 재현 케이스로 축소(shrink)합니다. 이 접근 방식은 예시 기반 테스트가 일상적으로 놓치는 엣지 케이스와 미묘한 버그를 드러냅니다.
 
-**Enforcement**: At each applicable stage, the model MUST verify compliance with these rules before presenting the stage completion message to the user.
+**시행**: 각 적용 가능한 스테이지에서 모델은 사용자에게 스테이지 완료 메시지를 제시하기 전에 본 룰에 대한 컴플라이언스를 반드시 검증해야 합니다.
 
-### Blocking PBT Finding Behavior
+### 차단(blocking) PBT 결함 동작
 
-A **blocking PBT finding** means:
-1. The finding MUST be listed in the stage completion message under a "PBT Findings" section with the PBT rule ID and description
-2. The stage MUST NOT present the "Continue to Next Stage" option until all blocking findings are resolved
-3. The model MUST present only the "Request Changes" option with a clear explanation of what needs to change
-4. The finding MUST be logged in `aidlc-docs/audit.md` with the PBT rule ID, description, and stage context
+**차단 PBT 결함(blocking PBT finding)** 은 다음을 의미합니다.
+1. 결함은 스테이지 완료 메시지의 "PBT Findings" 섹션에 PBT 룰 ID 및 설명과 함께 반드시 나열되어야 합니다.
+2. 모든 차단 결함이 해결될 때까지 스테이지는 "Continue to Next Stage" 옵션을 절대 제시하지 않아야 합니다.
+3. 모델은 변경이 필요한 항목에 대한 명확한 설명과 함께 "Request Changes" 옵션만을 제시해야 합니다.
+4. 결함은 PBT 룰 ID, 설명, 스테이지 컨텍스트와 함께 `aidlc-docs/audit.md`에 반드시 기록되어야 합니다.
 
-If a PBT rule is not applicable to the current project or unit (e.g., PBT-06 when no stateful components exist), mark it as **N/A** in the compliance summary — this is not a blocking finding.
+특정 PBT 룰이 현재 프로젝트 또는 유닛에 적용되지 않는 경우(예: 상태 컴포넌트가 존재하지 않을 때 PBT-06), 컴플라이언스 요약에서 **N/A**로 표시합니다. 이는 차단 결함이 아닙니다.
 
-### Default Enforcement
+### 기본 시행
 
-All rules in this document are **blocking** by default. If any rule's verification criteria are not met, it is a blocking PBT finding — follow the blocking finding behavior defined above.
+본 문서의 모든 룰은 기본적으로 **차단(blocking)** 입니다. 어떤 룰의 검증 기준이라도 충족되지 않으면 그것은 차단 PBT 결함이며, 위에 정의된 차단 결함 동작을 따릅니다.
 
-### Partial Enforcement Mode
+### 부분 시행 모드
 
-If the user selected **Partial** enforcement during opt-in, only rules PBT-02, PBT-03, PBT-07, PBT-08, and PBT-09 are enforced. All other rules are treated as advisory (non-blocking). Log the enforcement mode in `aidlc-docs/aidlc-state.md` under `## Extension Configuration`.
+사용자가 옵트인 시 **Partial** 시행을 선택한 경우, PBT-02, PBT-03, PBT-07, PBT-08, PBT-09 룰만 시행됩니다. 그 외 모든 룰은 권고(non-blocking)로 처리됩니다. 시행 모드는 `aidlc-docs/aidlc-state.md`의 `## Extension Configuration` 아래에 기록합니다.
 
-### Verification Criteria Format
+### 검증 기준 형식
 
-Verification items in this document are plain bullet points describing compliance checks. Each item should be evaluated as compliant or non-compliant during review.
+본 문서의 검증 항목은 컴플라이언스 점검을 기술하는 일반 글머리 기호입니다. 각 항목은 리뷰 시 컴플라이언스 충족 여부로 평가되어야 합니다.
 
 ---
 
 ## Rule PBT-01: Property Identification During Design
 
-**Rule**: Every unit containing business logic, data transformations, or algorithmic operations MUST be analyzed for testable properties during the Functional Design stage. The analysis MUST identify which of the following property categories apply:
+**룰**: 비즈니스 로직, 데이터 변환, 알고리즘 연산을 포함하는 모든 유닛은 Functional Design 스테이지에서 테스트 가능한 속성에 대해 반드시 분석되어야 합니다. 분석은 다음 속성 범주 중 어떤 것이 적용되는지 반드시 식별해야 합니다.
 
-| Category | Description | Example |
+| 범주 | 설명 | 예시 |
 |---|---|---|
-| Round-trip | An operation paired with its inverse yields the original value | serialize → deserialize = identity |
-| Invariant | A transformation preserves some measurable characteristic | sort preserves collection size and elements |
-| Idempotence | Applying an operation twice yields the same result as once | dedup(dedup(list)) = dedup(list) |
-| Commutativity | Different operation orderings produce the same result | add(a, b) = add(b, a) |
-| Oracle | A reference implementation or simplified model can verify results | optimized algorithm vs brute-force |
-| Induction | A property proven for smaller inputs extends to larger ones | recursive structures, divide-and-conquer |
-| Easy verification | The result is hard to compute but easy to check | maze solver output can be walked to verify |
+| Round-trip | 어떤 연산과 그 역연산을 쌍으로 적용하면 원래 값이 나옴 | serialize → deserialize = identity |
+| Invariant | 변환이 측정 가능한 어떤 특성을 보존함 | sort는 컬렉션 크기와 원소를 보존함 |
+| Idempotence | 어떤 연산을 두 번 적용해도 한 번 적용한 결과와 같음 | dedup(dedup(list)) = dedup(list) |
+| Commutativity | 연산 순서가 달라도 같은 결과를 만듦 | add(a, b) = add(b, a) |
+| Oracle | 참조 구현 또는 단순화된 모델로 결과를 검증할 수 있음 | 최적화된 알고리즘 vs 무차별 대입 |
+| Induction | 더 작은 입력에서 증명된 속성이 더 큰 입력으로 확장됨 | 재귀적 구조, 분할 정복 |
+| Easy verification | 결과를 계산하기는 어렵지만 확인하기는 쉬움 | 미로 해결기 출력은 경로를 따라가 확인 가능 |
 
-The identified properties MUST be documented in the functional design artifacts for the unit, and carried forward into code generation as PBT test requirements.
+식별된 속성은 해당 유닛의 functional design 아티팩트에 반드시 문서화되어야 하며, Code Generation 단계에서 PBT 테스트 요구사항으로 이어져야 합니다.
 
-**Verification**:
-- Functional design artifacts include a "Testable Properties" section listing identified properties per component
-- Each identified property references one of the categories above
-- Components with no identifiable properties are explicitly marked as "No PBT properties identified" with a brief rationale
-- The property list is referenced during code generation planning
+**검증**:
+- Functional design 아티팩트가 컴포넌트별로 식별된 속성을 나열하는 "Testable Properties" 섹션을 포함해야 함
+- 식별된 각 속성이 위 범주 중 하나를 참조해야 함
+- 식별 가능한 속성이 없는 컴포넌트는 간단한 근거와 함께 "No PBT properties identified"로 명시적으로 표시되어야 함
+- 속성 목록이 Code Generation 계획에서 참조되어야 함
 
 ---
 
 ## Rule PBT-02: Round-Trip Properties
 
-**Rule**: Any operation that has a logical inverse MUST have a property-based test verifying the round-trip. This includes but is not limited to:
-- Serialization / deserialization (JSON, XML, Protobuf, binary formats)
-- Encoding / decoding (Base64, URL encoding, compression)
-- Parsing / formatting (date parsing, number formatting, template rendering with structured input)
-- Encryption / decryption (where key is available)
-- Database write / read (for the data transformation layer, not the I/O itself)
-- Any pair of functions where `f_inverse(f(x)) = x` for all valid `x`
+**룰**: 논리적 역연산이 있는 모든 연산은 라운드트립을 검증하는 속성 기반 테스트를 반드시 가져야 합니다. 이에는 다음을 포함하되 이에 국한되지 않습니다.
+- 직렬화 / 역직렬화 (JSON, XML, Protobuf, 바이너리 포맷)
+- 인코딩 / 디코딩 (Base64, URL 인코딩, 압축)
+- 파싱 / 포매팅 (날짜 파싱, 숫자 포매팅, 구조화된 입력의 템플릿 렌더링)
+- 암호화 / 복호화 (키 사용 가능한 경우)
+- 데이터베이스 쓰기 / 읽기 (I/O 자체가 아닌 데이터 변환 계층에 대해)
+- 모든 유효한 `x`에 대해 `f_inverse(f(x)) = x`인 모든 함수 쌍
 
-The property-based test MUST generate random valid inputs using a domain-appropriate generator (see PBT-07) and assert that the round-trip produces a value equal to the original input.
+속성 기반 테스트는 도메인에 적합한 생성기(PBT-07 참고)를 사용해 랜덤 유효 입력을 생성하고, 라운드트립이 원래 입력과 동일한 값을 생성하는지 반드시 단언해야 합니다.
 
-**Verification**:
-- Every serialization/deserialization pair has a round-trip property test
-- Every encoding/decoding pair has a round-trip property test
-- Every parsing/formatting pair has a round-trip property test (or documents why the transformation is lossy)
-- Round-trip tests use generated inputs, not hardcoded examples
-- Lossy transformations (e.g., float formatting with precision loss) document the acceptable deviation and test within tolerance
+**검증**:
+- 모든 직렬화/역직렬화 쌍이 라운드트립 속성 테스트를 가져야 함
+- 모든 인코딩/디코딩 쌍이 라운드트립 속성 테스트를 가져야 함
+- 모든 파싱/포매팅 쌍이 라운드트립 속성 테스트를 가지거나, 변환이 손실성(lossy)인 이유를 문서화해야 함
+- 라운드트립 테스트가 하드코딩된 예시가 아닌 생성된 입력을 사용해야 함
+- 손실 변환(예: 정밀도 손실이 있는 부동소수점 포매팅)은 허용 가능한 편차를 문서화하고 허용 범위 내에서 테스트해야 함
 
 ---
 
 ## Rule PBT-03: Invariant Properties
 
-**Rule**: Functions with documented invariants MUST have property-based tests verifying those invariants hold across generated inputs. Common invariants include:
-- **Size preservation**: output collection has the same size as input (e.g., map, sort)
-- **Element preservation**: output contains exactly the same elements as input, possibly reordered (e.g., sort, shuffle)
-- **Ordering guarantees**: output satisfies an ordering constraint (e.g., sort produces non-decreasing order)
-- **Range constraints**: output values fall within a defined range (e.g., normalize produces values in [0, 1])
-- **Type preservation**: output type matches expected type for all valid inputs
-- **Business rule invariants**: domain-specific rules that must always hold (e.g., "account balance never goes negative after a valid transaction", "discount never exceeds item price")
+**룰**: 문서화된 불변식을 가진 함수는 생성된 입력 전반에서 해당 불변식이 성립함을 검증하는 속성 기반 테스트를 반드시 가져야 합니다. 일반적인 불변식은 다음과 같습니다.
+- **크기 보존**: 출력 컬렉션이 입력과 같은 크기를 가짐 (예: map, sort)
+- **원소 보존**: 출력이 입력과 정확히 같은 원소를 포함함, 순서는 다를 수 있음 (예: sort, shuffle)
+- **순서 보장**: 출력이 순서 제약을 만족함 (예: sort는 비감소 순서를 만듦)
+- **범위 제약**: 출력 값이 정의된 범위 내에 들어감 (예: normalize는 [0, 1] 범위 값을 만듦)
+- **타입 보존**: 모든 유효 입력에 대해 출력 타입이 예상 타입과 일치함
+- **비즈니스 룰 불변식**: 항상 성립해야 하는 도메인 특정 룰 (예: "유효 거래 후 계좌 잔액은 음수가 되지 않음", "할인은 상품 가격을 초과하지 않음")
 
-**Verification**:
-- Each documented invariant has a corresponding property-based test
-- Invariant tests generate a wide range of inputs including boundary values
-- Business rule invariants identified in functional design are covered by PBT
-- Invariant tests do not duplicate exact assertions from example-based tests — they test the general rule, not specific cases
+**검증**:
+- 문서화된 각 불변식에 대응하는 속성 기반 테스트가 존재해야 함
+- 불변식 테스트가 경계 값을 포함한 광범위한 입력을 생성해야 함
+- Functional Design에서 식별된 비즈니스 룰 불변식이 PBT로 커버되어야 함
+- 불변식 테스트는 예시 기반 테스트의 정확한 단언을 중복하지 않아야 함. 특정 케이스가 아닌 일반 룰을 테스트해야 함
 
 ---
 
 ## Rule PBT-04: Idempotency Properties
 
-**Rule**: Any operation that claims or requires idempotency MUST have a property-based test proving it. The test MUST verify that `f(f(x)) = f(x)` for all valid generated inputs. This applies to:
-- API endpoints documented as idempotent (PUT, DELETE)
-- Data normalization or sanitization functions
-- Cache population operations
-- Deduplication logic
-- Configuration application (applying config twice should not change state)
-- Message processing in at-least-once delivery systems
+**룰**: 멱등성을 주장하거나 요구하는 모든 연산은 이를 증명하는 속성 기반 테스트를 반드시 가져야 합니다. 테스트는 모든 유효 생성 입력에 대해 `f(f(x)) = f(x)`를 반드시 검증해야 합니다. 이는 다음에 적용됩니다.
+- 멱등으로 문서화된 API 엔드포인트 (PUT, DELETE)
+- 데이터 정규화 또는 새니타이즈 함수
+- 캐시 채우기 연산
+- 중복 제거 로직
+- 구성 적용 (구성을 두 번 적용해도 상태가 변하지 않아야 함)
+- at-least-once 전달 시스템에서의 메시지 처리
 
-**Verification**:
-- Every operation documented as idempotent has a PBT asserting `f(f(x)) = f(x)`
-- Idempotency tests use domain-appropriate generators (not just primitives)
-- For stateful operations, the test verifies observable state equivalence after single vs repeated application
+**검증**:
+- 멱등으로 문서화된 모든 연산에 `f(f(x)) = f(x)`를 단언하는 PBT가 있어야 함
+- 멱등성 테스트가 단순 원시 타입이 아닌 도메인에 적합한 생성기를 사용해야 함
+- 상태 연산의 경우, 테스트가 단일 적용 vs 반복 적용 후 관측 가능한 상태 동등성을 검증해야 함
 
 ---
 
 ## Rule PBT-05: Oracle and Model-Based Testing
 
-**Rule**: When a reference implementation, simplified model, or known-correct algorithm exists, property-based tests MUST compare the system under test against the oracle. This applies to:
-- Optimized algorithms replacing a known brute-force version
-- Refactored code replacing legacy implementations
-- Parallel/concurrent implementations compared against sequential versions
-- Custom implementations of well-known algorithms (sorting, searching, graph traversal)
-- New query engines compared against a reference database
+**룰**: 참조 구현, 단순화된 모델 또는 알려진 정답 알고리즘이 존재하는 경우, 속성 기반 테스트는 테스트 대상 시스템을 오라클과 비교해야 합니다. 이는 다음에 적용됩니다.
+- 알려진 무차별 대입 버전을 대체하는 최적화된 알고리즘
+- 레거시 구현을 대체하는 리팩터링된 코드
+- 순차 버전과 비교되는 병렬/동시 구현
+- 잘 알려진 알고리즘의 커스텀 구현 (정렬, 탐색, 그래프 순회)
+- 참조 데이터베이스와 비교되는 새 쿼리 엔진
 
-The property-based test MUST generate random valid inputs and assert that the system under test produces equivalent results to the oracle for all generated inputs.
+속성 기반 테스트는 랜덤 유효 입력을 생성하고, 테스트 대상 시스템이 모든 생성된 입력에 대해 오라클과 동등한 결과를 생성하는지 반드시 단언해야 합니다.
 
-**Verification**:
-- When a reference implementation exists (or can be trivially written), an oracle PBT is present
-- Oracle tests generate diverse inputs covering normal, boundary, and adversarial cases
-- Equivalence is defined precisely (exact equality, structural equality, or documented tolerance)
-- If no oracle exists, this rule is marked N/A with rationale
+**검증**:
+- 참조 구현이 존재하거나 자명하게 작성 가능한 경우 오라클 PBT가 존재해야 함
+- 오라클 테스트가 정상, 경계, 적대적(adversarial) 케이스를 다루는 다양한 입력을 생성해야 함
+- 동등성이 정확히 정의되어야 함 (정확한 일치, 구조적 일치, 또는 문서화된 허용 범위)
+- 오라클이 존재하지 않는 경우 이 룰은 근거와 함께 N/A로 표시되어야 함
 
 ---
 
 ## Rule PBT-06: Stateful Property Testing
 
-**Rule**: Components that manage mutable state MUST be evaluated for stateful property testing. Stateful PBT generates random sequences of commands (operations) against the system and verifies that invariants hold after each step. This applies to:
-- In-memory caches and data stores
-- State machines and workflow engines
-- Queue and buffer implementations
-- Session management systems
-- Shopping carts, order pipelines, and similar stateful business objects
-- Any component where the result of an operation depends on prior operations
+**룰**: 가변 상태를 관리하는 컴포넌트는 상태 기반 속성 테스트(stateful PBT) 대상으로 반드시 평가되어야 합니다. 상태 기반 PBT는 시스템에 대한 랜덤 명령(연산) 시퀀스를 생성하고 각 단계 후 불변식이 성립하는지 검증합니다. 이는 다음에 적용됩니다.
+- 인메모리 캐시 및 데이터 저장소
+- 상태 머신 및 워크플로우 엔진
+- 큐 및 버퍼 구현
+- 세션 관리 시스템
+- 장바구니, 주문 파이프라인 및 유사한 상태 기반 비즈니스 객체
+- 연산의 결과가 이전 연산에 의존하는 모든 컴포넌트
 
-Stateful PBT MUST:
-- Define a simplified model (reference state) that mirrors the system under test
-- Generate random sequences of valid commands (add, remove, update, query, etc.)
-- Execute each command against both the real system and the model
-- Assert that observable state or query results match between system and model after each command
-- Test sequences of varying lengths, including empty sequences
+상태 기반 PBT는 반드시 다음을 수행해야 합니다.
+- 테스트 대상 시스템을 미러링하는 단순화된 모델(참조 상태)을 정의
+- 유효 명령(add, remove, update, query 등)의 랜덤 시퀀스를 생성
+- 각 명령을 실제 시스템과 모델 양쪽에 대해 실행
+- 각 명령 이후 시스템과 모델 사이의 관측 가능한 상태 또는 쿼리 결과가 일치하는지 단언
+- 빈 시퀀스를 포함하여 다양한 길이의 시퀀스를 테스트
 
-**Verification**:
-- Stateful components identified in functional design have stateful PBT or document why it is not applicable
-- A simplified model is defined for comparison
-- Command generators produce valid operation sequences with realistic parameter distributions
-- Invariants are checked after each command in the sequence, not just at the end
-- If no stateful components exist, this rule is marked N/A
+**검증**:
+- Functional Design에서 식별된 상태 컴포넌트는 상태 기반 PBT를 가지거나 적용 불가한 이유를 문서화해야 함
+- 비교를 위한 단순화된 모델이 정의되어 있어야 함
+- 명령 생성기가 현실적인 파라미터 분포로 유효한 연산 시퀀스를 생성해야 함
+- 불변식이 시퀀스의 마지막이 아닌 각 명령 이후마다 검사되어야 함
+- 상태 컴포넌트가 존재하지 않는 경우 이 룰은 N/A로 표시됨
 
 ---
 
 ## Rule PBT-07: Generator Quality
 
-**Rule**: Property-based tests MUST use domain-specific generators that produce realistic, structured inputs — not just primitive types. Poor generators (e.g., random strings for email fields, unbounded integers for age fields) produce meaningless test cases and miss real bugs.
+**룰**: 속성 기반 테스트는 단순 원시 타입이 아닌 현실적이고 구조화된 입력을 생성하는 도메인 특정 생성기를 반드시 사용해야 합니다. 빈약한 생성기(예: 이메일 필드용 랜덤 문자열, 나이 필드용 무경계 정수)는 무의미한 테스트 케이스를 만들고 실제 버그를 놓칩니다.
 
-Generator requirements:
-- **Domain types**: Custom generators MUST be created for domain objects (e.g., User, Order, Transaction) that respect business constraints (valid email format, positive amounts, valid date ranges)
-- **Constrained primitives**: Numeric generators MUST be constrained to realistic ranges where the domain requires it
-- **Structured data**: Generators for complex inputs (nested objects, lists of domain objects) MUST produce structurally valid data
-- **Edge case inclusion**: Generators SHOULD be configured to include boundary values (empty collections, zero, maximum values, Unicode strings) alongside normal values
-- **Reusability**: Domain generators SHOULD be defined as reusable test utilities, not duplicated across test files
+생성기 요구사항:
+- **도메인 타입**: 도메인 객체(예: User, Order, Transaction)에 대해 비즈니스 제약(유효 이메일 형식, 양수 금액, 유효 날짜 범위)을 존중하는 커스텀 생성기가 반드시 생성되어야 함
+- **제약된 원시 타입**: 도메인이 요구하는 경우 숫자 생성기는 현실적인 범위로 반드시 제약되어야 함
+- **구조화된 데이터**: 복합 입력(중첩 객체, 도메인 객체 목록)에 대한 생성기는 구조적으로 유효한 데이터를 반드시 생성해야 함
+- **엣지 케이스 포함**: 생성기는 정상 값과 함께 경계 값(빈 컬렉션, 0, 최댓값, 유니코드 문자열)을 포함하도록 구성되어야(SHOULD) 함
+- **재사용성**: 도메인 생성기는 테스트 파일 전반에 중복되는 것이 아니라 재사용 가능한 테스트 유틸리티로 정의되어야(SHOULD) 함
 
-**Verification**:
-- No PBT uses only raw primitive generators (e.g., `st.integers()` alone) for domain-typed parameters
-- Custom generators exist for domain objects used in PBT
-- Generators respect documented business constraints (e.g., positive amounts, valid formats)
-- Generator definitions are centralized and reusable where multiple tests share the same domain types
+**검증**:
+- 도메인 타입 파라미터에 원시 생성기(예: 단독 `st.integers()`)만 사용하는 PBT가 없어야 함
+- PBT에서 사용되는 도메인 객체에 대한 커스텀 생성기가 존재해야 함
+- 생성기가 문서화된 비즈니스 제약(예: 양수 금액, 유효 포맷)을 존중해야 함
+- 여러 테스트가 같은 도메인 타입을 공유하는 경우 생성기 정의가 중앙화되고 재사용 가능해야 함
 
 ---
 
 ## Rule PBT-08: Shrinking and Reproducibility
 
-**Rule**: All property-based tests MUST support shrinking and deterministic reproducibility.
+**룰**: 모든 속성 기반 테스트는 축소(shrinking)와 결정론적 재현성을 반드시 지원해야 합니다.
 
-- **Shrinking**: When a property fails, the PBT framework MUST automatically reduce the failing input to a minimal reproducing case. Tests MUST NOT disable or bypass the framework's shrinking mechanism unless there is a documented technical reason (e.g., shrinking is incompatible with external service calls in integration tests).
-- **Reproducibility**: Every PBT run MUST be reproducible via a seed value. The seed MUST be logged on failure so that the exact failing scenario can be replayed. CI configurations MUST either use a fixed seed for deterministic runs or log the random seed on every run for post-failure reproduction.
-- **CI integration**: PBT MUST be included in the project's CI pipeline. Flaky PBT failures (tests that pass on retry without code changes) MUST be investigated, not suppressed.
+- **축소(Shrinking)**: 속성이 실패하면 PBT 프레임워크는 실패하는 입력을 최소 재현 케이스로 자동 축소해야 합니다. 문서화된 기술적 이유가 있는 경우(예: 통합 테스트에서 외부 서비스 호출과 축소가 호환되지 않는 경우)를 제외하고 테스트는 프레임워크의 축소 메커니즘을 비활성화하거나 우회해서는 안 됩니다.
+- **재현성**: 모든 PBT 실행은 시드 값으로 재현 가능해야 합니다. 정확한 실패 시나리오를 재생할 수 있도록 시드는 실패 시 반드시 로깅되어야 합니다. CI 구성은 결정론적 실행을 위해 고정 시드를 사용하거나 실패 후 재현을 위해 매 실행마다 랜덤 시드를 로깅해야 합니다.
+- **CI 통합**: PBT는 프로젝트의 CI 파이프라인에 반드시 포함되어야 합니다. 코드 변경 없이 재시도 시 통과하는 플레이키(flaky) PBT 실패는 억제가 아닌 조사 대상이 되어야 합니다.
 
-**Verification**:
-- PBT framework's shrinking is enabled (not overridden or disabled)
-- Test output on failure includes the seed value and the shrunk minimal failing input
-- CI configuration logs the seed for every PBT run or uses a fixed seed
-- No PBT is excluded from CI without documented justification
-- Flaky PBT failures are tracked and investigated, not silently retried
+**검증**:
+- PBT 프레임워크의 축소가 활성화되어 있어야 함 (오버라이드되거나 비활성화되지 않음)
+- 실패 시 테스트 출력에 시드 값과 축소된 최소 실패 입력이 포함되어야 함
+- CI 구성이 매 PBT 실행마다 시드를 로깅하거나 고정 시드를 사용해야 함
+- 문서화된 정당화 없이 PBT가 CI에서 제외되지 않아야 함
+- 플레이키 PBT 실패가 조용한 재시도가 아닌 추적 및 조사 대상이 되어야 함
 
 ---
 
 ## Rule PBT-09: Framework Selection
 
-**Rule**: The project MUST select and configure an appropriate property-based testing framework for its primary language(s). The framework MUST support:
-- Custom generators / strategies for domain types
-- Automatic shrinking of failing cases
-- Seed-based reproducibility
-- Integration with the project's existing test runner
+**룰**: 프로젝트는 주 사용 언어에 적합한 속성 기반 테스트 프레임워크를 반드시 선택하고 구성해야 합니다. 프레임워크는 다음을 반드시 지원해야 합니다.
+- 도메인 타입에 대한 커스텀 생성기 / 전략(strategy)
+- 실패 케이스의 자동 축소
+- 시드 기반 재현성
+- 프로젝트의 기존 테스트 러너와의 통합
 
-Recommended frameworks by language (non-exhaustive):
+언어별 권장 프레임워크(비망라적):
 
-| Language | Framework | Notes |
+| 언어 | 프레임워크 | 비고 |
 |---|---|---|
-| Python | Hypothesis | Mature, excellent shrinking, Django integration |
-| JavaScript / TypeScript | fast-check | Integrates with Jest, Vitest, Mocha |
-| Java | jqwik | JUnit 5 integration, stateful testing support |
-| Kotlin | Kotest Property Testing | Kotest framework integration |
-| Scala | ScalaCheck | SBT integration, widely adopted |
-| Rust | proptest | Macro-based, good shrinking |
-| Go | rapid | Lightweight, idiomatic Go |
-| Haskell | QuickCheck | The original PBT framework |
-| C# / .NET | FsCheck | Works with xUnit, NUnit |
-| Erlang / Elixir | PropEr / StreamData | OTP-aware, stateful testing |
+| Python | Hypothesis | 성숙, 우수한 축소, Django 통합 |
+| JavaScript / TypeScript | fast-check | Jest, Vitest, Mocha와 통합 |
+| Java | jqwik | JUnit 5 통합, 상태 기반 테스트 지원 |
+| Kotlin | Kotest Property Testing | Kotest 프레임워크 통합 |
+| Scala | ScalaCheck | SBT 통합, 널리 채택됨 |
+| Rust | proptest | 매크로 기반, 좋은 축소 |
+| Go | rapid | 경량, 관용적 Go |
+| Haskell | QuickCheck | 원조 PBT 프레임워크 |
+| C# / .NET | FsCheck | xUnit, NUnit과 동작 |
+| Erlang / Elixir | PropEr / StreamData | OTP 인식, 상태 기반 테스트 |
 
-The selected framework MUST be documented in the tech stack decisions and included as a project dependency.
+선택된 프레임워크는 tech stack 결정에 반드시 문서화되고 프로젝트 의존성으로 포함되어야 합니다.
 
-**Verification**:
-- A PBT framework is selected and documented in tech stack decisions
-- The framework is included in project dependencies (package.json, pom.xml, requirements.txt, etc.)
-- The framework supports custom generators, shrinking, and seed-based reproducibility
-- If the project uses multiple languages, each language with PBT-applicable code has a framework selected
+**검증**:
+- PBT 프레임워크가 선택되고 tech stack 결정에 문서화되어 있어야 함
+- 프레임워크가 프로젝트 의존성(package.json, pom.xml, requirements.txt 등)에 포함되어 있어야 함
+- 프레임워크가 커스텀 생성기, 축소, 시드 기반 재현성을 지원해야 함
+- 프로젝트가 여러 언어를 사용하는 경우, PBT 적용 가능 코드를 가진 각 언어에 대해 프레임워크가 선택되어 있어야 함
 
 ---
 
 ## Rule PBT-10: Complementary Testing Strategy
 
-**Rule**: Property-based tests MUST complement, not replace, example-based tests. The two approaches serve different purposes:
+**룰**: 속성 기반 테스트는 예시 기반 테스트를 대체하는 것이 아니라 반드시 보완해야 합니다. 두 접근 방식은 서로 다른 목적을 가집니다.
 
-- **Example-based tests**: Document specific known scenarios, regression cases, and business-critical edge cases with explicit expected values. They serve as executable documentation of concrete behavior.
-- **Property-based tests**: Verify general invariants across a wide input space. They find unknown edge cases and validate that properties hold universally.
+- **예시 기반 테스트**: 특정 알려진 시나리오, 회귀 케이스, 비즈니스에 중요한 엣지 케이스를 명시적인 기대값과 함께 문서화합니다. 구체적 동작에 대한 실행 가능한 문서 역할을 합니다.
+- **속성 기반 테스트**: 넓은 입력 공간에 걸친 일반 불변식을 검증합니다. 알려지지 않은 엣지 케이스를 찾고 속성이 보편적으로 성립하는지 검증합니다.
 
-Requirements:
-- Critical business scenarios identified in user stories or requirements MUST have explicit example-based tests, even if a PBT covers the same property
-- PBT MUST NOT be the sole test for any business-critical path — at least one example-based test must pin the expected behavior for key scenarios
-- When a PBT discovers a failing case, the shrunk minimal example SHOULD be added as a permanent example-based regression test
-- Test documentation MUST clearly distinguish between example-based and property-based tests (separate test files, test classes, or clearly named test functions)
+요구사항:
+- 사용자 스토리 또는 요구사항에서 식별된 중요 비즈니스 시나리오는 PBT가 같은 속성을 커버하더라도 명시적인 예시 기반 테스트를 반드시 가져야 합니다.
+- 비즈니스에 중요한 경로의 유일한 테스트가 PBT여서는 안 됩니다. 주요 시나리오에 대해 기대 동작을 고정하는 예시 기반 테스트가 최소 하나는 있어야 합니다.
+- PBT가 실패 케이스를 발견했을 때, 축소된 최소 예시는 영구 예시 기반 회귀 테스트로 추가되어야(SHOULD) 합니다.
+- 테스트 문서는 예시 기반 테스트와 속성 기반 테스트를 명확히 구분해야 합니다(별도의 테스트 파일, 테스트 클래스 또는 명확하게 이름 지어진 테스트 함수).
 
-**Verification**:
-- Business-critical paths have both example-based and property-based tests
-- PBT is not used as the only test coverage for any critical feature
-- Test files or test classes clearly separate or label PBT vs example-based tests
-- Regression tests from PBT-discovered failures are captured as permanent example-based tests
+**검증**:
+- 비즈니스에 중요한 경로가 예시 기반 테스트와 속성 기반 테스트를 모두 가져야 함
+- PBT가 어떤 중요 기능에 대한 유일한 테스트 커버리지로 사용되지 않아야 함
+- 테스트 파일 또는 테스트 클래스가 PBT와 예시 기반 테스트를 명확히 분리하거나 라벨링해야 함
+- PBT가 발견한 실패로부터의 회귀 테스트가 영구 예시 기반 테스트로 포착되어야 함
 
 ---
 
-## Enforcement Integration
+## 시행 통합
 
-These rules are cross-cutting constraints that apply to the following AI-DLC stages:
+본 룰은 다음 AI-DLC 스테이지에 적용되는 횡단 제약입니다.
 
 | Stage | Applicable Rules | Enforcement |
 |---|---|---|
-| Functional Design | PBT-01 | Property identification must appear in design artifacts |
-| NFR Requirements | PBT-09 | Framework selection must be included in tech stack decisions |
-| Code Generation (Planning) | PBT-01 through PBT-10 | Code generation plan must include PBT test steps for identified properties |
-| Code Generation (Generation) | PBT-02 through PBT-08, PBT-10 | Generated tests must include PBT alongside example-based tests |
-| Build and Test | PBT-08 | Test execution instructions must include PBT with seed logging and CI integration |
+| Functional Design | PBT-01 | 속성 식별이 설계 아티팩트에 반드시 나타나야 함 |
+| NFR Requirements | PBT-09 | 프레임워크 선택이 tech stack 결정에 포함되어야 함 |
+| Code Generation (Planning) | PBT-01 through PBT-10 | 코드 생성 계획에 식별된 속성에 대한 PBT 테스트 단계가 포함되어야 함 |
+| Code Generation (Generation) | PBT-02 through PBT-08, PBT-10 | 생성된 테스트에 예시 기반 테스트와 함께 PBT가 포함되어야 함 |
+| Build and Test | PBT-08 | 테스트 실행 지침에 시드 로깅 및 CI 통합을 포함한 PBT가 포함되어야 함 |
 
-At each applicable stage:
-- Evaluate all PBT rule verification criteria against the artifacts produced
-- Include a "PBT Compliance" section in the stage completion summary listing each rule as compliant, non-compliant, or N/A
-- If any rule is non-compliant, this is a blocking PBT finding — follow the blocking finding behavior defined in the Overview
-- Include PBT rule references in design documentation and test instructions
+각 적용 가능한 스테이지에서:
+- 생성된 아티팩트에 대해 모든 PBT 룰 검증 기준을 평가합니다.
+- 스테이지 완료 요약에 각 룰을 compliant, non-compliant 또는 N/A로 나열하는 "PBT Compliance" 섹션을 포함합니다.
+- 어떤 룰이라도 non-compliant인 경우 이는 차단 PBT 결함이며, Overview에 정의된 차단 결함 동작을 따릅니다.
+- 설계 문서 및 테스트 지침에 PBT 룰 참조를 포함합니다.
 
 ---
 
-## Appendix: Property Category Quick Reference
+## 부록: 속성 범주 퀵 레퍼런스
 
-For developers and AI models identifying properties during Functional Design (PBT-01):
+Functional Design 단계(PBT-01)에서 속성을 식별하는 개발자 및 AI 모델을 위한 퀵 레퍼런스입니다.
 
 | Pattern Name | Formal Term | Test Shape | When to Use |
 |---|---|---|---|
-| There and back again | Invertible function | `f_inv(f(x)) == x` | Serialization, encoding, parsing |
-| Some things never change | Invariant | `measure(f(x)) == measure(x)` | Sort, map, filter, transform |
-| The more things change, the more they stay the same | Idempotence | `f(f(x)) == f(x)` | Normalization, dedup, cache writes |
-| Different paths, same destination | Commutativity | `f(g(x)) == g(f(x))` | Arithmetic, set operations, independent transforms |
-| Solve a smaller problem first | Structural induction | Property on `x` implies property on `x + element` | Recursive structures, lists, trees |
-| Hard to prove, easy to verify | Verification | `verify(solve(x)) == true` | Solvers, optimizers, search algorithms |
-| The test oracle | Reference comparison | `f(x) == oracle(x)` | Optimized vs brute-force, refactored vs legacy |
+| There and back again | Invertible function | `f_inv(f(x)) == x` | 직렬화, 인코딩, 파싱 |
+| Some things never change | Invariant | `measure(f(x)) == measure(x)` | sort, map, filter, transform |
+| The more things change, the more they stay the same | Idempotence | `f(f(x)) == f(x)` | 정규화, 중복 제거, 캐시 쓰기 |
+| Different paths, same destination | Commutativity | `f(g(x)) == g(f(x))` | 산술, 집합 연산, 독립적 변환 |
+| Solve a smaller problem first | Structural induction | `x`에 대한 속성이 `x + element`에 대한 속성을 함의함 | 재귀 구조, 리스트, 트리 |
+| Hard to prove, easy to verify | Verification | `verify(solve(x)) == true` | 해결기, 최적화기, 탐색 알고리즘 |
+| The test oracle | Reference comparison | `f(x) == oracle(x)` | 최적화 vs 무차별 대입, 리팩터링 vs 레거시 |
 
-Source: Property category taxonomy adapted from Scott Wlaschin's "Choosing properties for property-based testing" ([fsharpforfunandprofit.com](https://fsharpforfunandprofit.com/posts/property-based-testing-2/)).
+출처: 속성 범주 분류는 Scott Wlaschin의 "Choosing properties for property-based testing"([fsharpforfunandprofit.com](https://fsharpforfunandprofit.com/posts/property-based-testing-2/))에서 차용하였습니다.

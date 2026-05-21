@@ -2,50 +2,50 @@
 
 ## Executive Summary
 
-CalcEngine is a REST API that lets developers send math expressions as strings and get back accurate results. Instead of every team building their own math parser and trig functions, they call our API. We sell it as a subscription service with a free tier to drive adoption and paid tiers for volume.
+CalcEngine은 개발자가 수학 표현식을 문자열로 보내면 정확한 결과를 돌려받을 수 있게 해주는 REST API입니다. 모든 팀이 자체 수학 파서와 삼각 함수를 만드는 대신, 우리 API를 호출합니다. 무료 티어로 도입을 견인하고 볼륨에 따른 유료 티어를 갖춘 구독 서비스로 판매합니다.
 
-## Features In Scope (MVP)
+## 스코프에 포함된 기능 (MVP)
 
-- Expression evaluation: accept a string like `"2 * sin(pi/4) + sqrt(16)"` and return the numeric result
-- Basic arithmetic: add, subtract, multiply, divide, power, square root, modulo, absolute value, floor, ceiling, rounding
-- Trigonometry: sin, cos, tan, asin, acos, atan, atan2 (degree and radian modes)
-- Logarithms: log base 10, natural log, log with arbitrary base, exp
-- Basic statistics: mean, median, mode, standard deviation, variance, min, max, sum, percentile (accepts arrays)
-- Math constants: pi, e, phi, sqrt(2)
-- Combinatorics: factorial, permutations (nPr), combinations (nCr)
-- Error handling: clear error codes for division by zero, domain errors (log of negative), overflow, malformed expressions
-- API key authentication with free tier (10K calls/month) and paid tiers
-- API docs portal with interactive sandbox and code examples
+- 표현식 평가: `"2 * sin(pi/4) + sqrt(16)"`와 같은 문자열을 받아 숫자 결과를 반환
+- 기본 산술: 덧셈, 뺄셈, 곱셈, 나눗셈, 거듭제곱, 제곱근, 나머지, 절댓값, 내림, 올림, 반올림
+- 삼각함수: sin, cos, tan, asin, acos, atan, atan2 (도(degree) 및 라디안 모드)
+- 로그: 상용로그(밑 10), 자연로그, 임의 밑 로그, exp
+- 기본 통계: 평균, 중앙값, 최빈값, 표준편차, 분산, 최소, 최대, 합, 백분위수 (배열 입력)
+- 수학 상수: pi, e, phi, sqrt(2)
+- 조합론: 팩토리얼, 순열 (nPr), 조합 (nCr)
+- 에러 처리: 0으로 나누기, 도메인 에러(음수의 로그), 오버플로우, 잘못된 형식의 표현식에 대한 명확한 에러 코드
+- 무료 티어(월 10K 호출)와 유료 티어를 가진 API 키 인증
+- 인터랙티브 샌드박스와 코드 예제가 있는 API 문서 포털
 
-## Features Explicitly Out of Scope (MVP)
+## 명시적으로 스코프 밖인 기능 (MVP)
 
-- Arbitrary-precision arithmetic (Phase 2)
-- Matrix and linear algebra (Phase 2)
-- Calculus -- derivatives, integrals (Phase 2)
-- Financial math -- amortization, NPV, IRR (Phase 2)
-- Client SDKs for Python/JS/Java (Phase 2 -- raw HTTP is fine for MVP)
-- Step-by-step solution breakdowns (Phase 3)
-- Unit conversion and physical constants (Phase 3)
-- Batch processing / async webhooks (Phase 3)
-- Symbolic computation (Phase 3)
-- On-premises deployment (Phase 3+)
+- 임의 정밀도 산술 (Phase 2)
+- 행렬 및 선형대수 (Phase 2)
+- 미적분 -- 미분, 적분 (Phase 2)
+- 금융 수학 -- 분할상환, NPV, IRR (Phase 2)
+- Python/JS/Java 클라이언트 SDK (Phase 2 -- MVP에는 raw HTTP로 충분)
+- 단계별 풀이 분해 (Phase 3)
+- 단위 변환 및 물리 상수 (Phase 3)
+- 배치 처리 / 비동기 webhooks (Phase 3)
+- 심볼릭 계산 (Phase 3)
+- 온프레미스 배포 (Phase 3+)
 
-## Target Users
+## 타겟 사용자
 
-- Application developers who need math in their products but do not want to build/maintain it
-- EdTech companies that need a calculator backend for student-facing tools
-- FinTech startups that need auditable calculations (paid tier, Phase 2 focus)
+- 자사 제품에 수학이 필요하지만 직접 만들고 유지하기를 원하지 않는 애플리케이션 개발자
+- 학생 대상 도구를 위한 계산기 백엔드가 필요한 EdTech 기업
+- 감사 가능한 계산이 필요한 FinTech 스타트업 (유료 티어, Phase 2 포커스)
 
-## Key Success Metrics
+## 핵심 성공 지표
 
-- 1,000 registered developer accounts within 3 months
-- 50 paid subscribers within 6 months
-- API uptime 99.9%
-- Response time p50 under 50ms
-- Zero critical accuracy bugs (wrong calculation results)
+- 3개월 내 1,000개의 등록된 개발자 계정
+- 6개월 내 50명의 유료 구독자
+- API 가동률 99.9%
+- 응답 시간 p50 50ms 미만
+- 치명적 정확도 버그 0건 (잘못된 계산 결과 없음)
 
 ## Open Questions
 
-- Should the expression evaluator support variable assignment (`x = 5; 2*x + 3`) or only single expressions?
-- Should results be returned as strings (preserving precision) or JSON numbers?
-- Should implicit multiplication be supported (`2pi` meaning `2 * pi`)?
+- 표현식 평가기가 변수 할당(`x = 5; 2*x + 3`)을 지원해야 하는가, 아니면 단일 표현식만 지원해야 하는가?
+- 결과는 문자열로 반환되어야 하는가(정밀도 보존) 아니면 JSON 숫자로 반환되어야 하는가?
+- 암묵적 곱셈(`2pi`가 `2 * pi`를 의미)을 지원해야 하는가?

@@ -1,65 +1,64 @@
 # Vision: Returns and Refunds Module — OrderFlow Platform
 
-> **Brownfield project.** This document describes a change to an existing system.
-> The Current State section is required. It gives AIDLC the context it needs to
-> understand what already exists before generating requirements and design.
+> **브라운필드 프로젝트.** 이 문서는 기존 시스템에 대한 변경을 기술합니다.
+> Current State 섹션은 필수입니다. 요구사항과 설계를 생성하기 전에 무엇이
+> 이미 존재하는지 이해하는 데 필요한 컨텍스트를 AIDLC에 제공합니다.
 
 ---
 
 ## Current State
 
-OrderFlow is an existing e-commerce order management platform built in TypeScript
-on Node.js. It handles order creation, payment capture, fulfilment routing, and
-shipping notifications. It does not currently have any returns or refunds capability.
-Customers who want to return an item contact support via email, and refunds are
-processed manually by the finance team in the payment provider dashboard.
+OrderFlow는 TypeScript와 Node.js로 만들어진 기존 e-commerce 주문 관리 플랫폼입니다.
+주문 생성, 결제 캡처, 풀필먼트 라우팅, 배송 알림을 처리합니다. 현재 반품이나
+환불 기능은 없습니다. 아이템을 반품하려는 고객은 이메일로 지원팀에 연락하고,
+환불은 결제 제공자 대시보드에서 재무 팀이 수동으로 처리합니다.
 
-The existing platform has three backend services (order-service, payment-service,
-notification-service) and a React frontend. All services are deployed on AWS ECS
-Fargate. PostgreSQL is the primary data store.
-
----
-
-## What We Are Adding
-
-A returns and refunds module that allows customers to self-serve return requests
-through the existing storefront, and allows operations staff to review, approve,
-and process refunds without leaving the platform.
+기존 플랫폼은 세 개의 백엔드 서비스(order-service, payment-service,
+notification-service)와 React 프론트엔드를 가지고 있습니다. 모든 서비스는
+AWS ECS Fargate에 배포됩니다. PostgreSQL이 주 데이터 저장소입니다.
 
 ---
 
-## Features In Scope (this iteration)
+## 추가하려는 것
 
-- Customer-facing return request form: select order, select items, select return reason
-- Return request status tracking for customers (submitted, approved, rejected, refunded)
-- Operations dashboard: view open return requests, approve or reject with a note
-- Automated refund processing via the existing payment-service integration
-- Email notifications to customers at each status change via notification-service
-- Return reason codes: damaged, wrong item, changed mind, other
-
-## Features Explicitly Out of Scope (this iteration)
-
-- Return shipping label generation (manual process for now, Phase 2)
-- Partial refunds at the line-item level (full order refunds only in MVP)
-- Restocking or inventory management integration (Phase 2)
-- Fraud detection or return abuse prevention (Phase 3)
-- Self-service exchanges (return + reorder in one flow, Phase 2)
-- Returns analytics or reporting dashboard (Phase 2)
+고객이 기존 스토어프론트를 통해 반품 요청을 셀프 서비스로 처리하고,
+운영 스태프가 플랫폼을 벗어나지 않고 환불을 검토, 승인, 처리할 수 있게 하는
+반품 및 환불 모듈.
 
 ---
 
-## What Must Not Change
+## 이번 이터레이션에서 스코프에 포함된 기능
 
-- Order creation, payment capture, and fulfilment flows — do not modify these
-- The existing PostgreSQL schema for orders, payments, and customers — additive changes only
-- The notification-service API contract — consume it as-is, do not modify it
-- The existing React frontend component library and design system
+- 고객 대상 반품 요청 폼: 주문 선택, 아이템 선택, 반품 사유 선택
+- 고객의 반품 요청 상태 추적 (submitted, approved, rejected, refunded)
+- 운영 대시보드: 열린 반품 요청 보기, 노트와 함께 승인 또는 거절
+- 기존 payment-service 통합을 통한 자동 환불 처리
+- notification-service를 통해 상태 변경 시마다 고객에게 이메일 알림
+- 반품 사유 코드: 손상, 잘못된 아이템, 마음 변경, 기타
+
+## 이번 이터레이션에서 명시적으로 스코프 밖인 기능
+
+- 반품 배송 라벨 생성 (당분간 수동 프로세스, Phase 2)
+- 라인 아이템 레벨의 부분 환불 (MVP는 전체 주문 환불만)
+- 재입고 또는 재고 관리 통합 (Phase 2)
+- 사기 탐지 또는 반품 남용 방지 (Phase 3)
+- 셀프 서비스 교환 (반품 + 재주문을 한 플로우에서, Phase 2)
+- 반품 분석 또는 리포팅 대시보드 (Phase 2)
+
+---
+
+## 변경되어서는 안 되는 것
+
+- 주문 생성, 결제 캡처, 풀필먼트 플로우 — 이를 수정하지 마세요
+- 주문, 결제, 고객을 위한 기존 PostgreSQL 스키마 — 추가 변경만 허용
+- notification-service API 계약 — 있는 그대로 사용, 수정하지 마세요
+- 기존 React 프론트엔드 컴포넌트 라이브러리와 디자인 시스템
 
 ---
 
 ## Open Questions
 
-- Should return requests have an approval step, or should eligible returns be auto-approved based on policy rules (e.g., within 30 days, item not marked as final sale)?
-- Who owns the return request in the operations dashboard — customer support team, warehouse team, or both with different views?
-- Should refunds be issued immediately on approval, or batched and processed at end of day?
-- Is there a return window policy (e.g., 30 days from delivery) that the system should enforce, or is it case-by-case for now?
+- 반품 요청에 승인 단계가 있어야 할까, 아니면 정책 룰(예: 30일 이내, 최종 판매로 표시되지 않은 아이템)에 따라 자격 있는 반품이 자동 승인되어야 할까?
+- 운영 대시보드에서 반품 요청의 소유자는 누구인가 — 고객 지원 팀, 창고 팀, 아니면 둘 다 다른 뷰로?
+- 환불은 승인 즉시 발행되어야 할까, 아니면 배치로 묶어서 영업 종료 시 처리되어야 할까?
+- 시스템이 강제해야 할 반품 기간 정책(예: 배송 후 30일)이 있는가, 아니면 지금은 케이스별로 처리하는가?

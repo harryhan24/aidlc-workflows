@@ -1,78 +1,78 @@
-# Content Validation Rules
+# 콘텐츠 검증 룰 (Content Validation Rules)
 
-## MANDATORY: Content Validation Before File Creation
+## MANDATORY: 파일 생성 전 콘텐츠 검증
 
-**CRITICAL**: All generated content MUST be validated before writing to files to prevent parsing errors.
+**CRITICAL**: 파싱 에러를 방지하기 위해, 생성된 모든 콘텐츠는 파일로 쓰기 전에 검증되어야 합니다.
 
-## ASCII Diagram Standards
+## ASCII 다이어그램 표준
 
-**CRITICAL**: Before creating ANY file with ASCII diagrams:
+**CRITICAL**: ASCII 다이어그램이 포함된 어떤 파일이라도 생성하기 전에:
 
 1. **LOAD** `common/ascii-diagram-standards.md`
-2. **VALIDATE** each diagram:
-   - Count characters per line (all lines MUST be same width)
-   - Use ONLY: `+` `-` `|` `^` `v` `<` `>` and spaces
-   - NO Unicode box-drawing characters
-   - Spaces only (NO tabs)
-3. **TEST** alignment by verifying box corners align vertically
+2. **VALIDATE** 각 다이어그램을 검증:
+   - 라인별 문자 수를 세어 모든 라인이 같은 폭이어야 함
+   - 다음만 사용: `+` `-` `|` `^` `v` `<` `>` 와 공백
+   - 유니코드 박스-드로잉 문자는 사용 금지
+   - 공백만 사용 (탭 금지)
+3. **TEST** 박스 모서리가 세로로 정렬되는지 확인해 정렬 상태를 점검
 
-**See `common/ascii-diagram-standards.md` for patterns and validation checklist.**
+**패턴과 검증 체크리스트는 `common/ascii-diagram-standards.md`를 참고하세요.**
 
-## Mermaid Diagram Validation
+## Mermaid 다이어그램 검증
 
-### Required Validation Steps
-1. **Syntax Check**: Validate Mermaid syntax before file creation
-2. **Character Escaping**: Ensure special characters are properly escaped
-3. **Fallback Content**: Provide text alternative if Mermaid fails validation
+### 필수 검증 단계
+1. **Syntax Check**: 파일 생성 전에 Mermaid 문법을 검증
+2. **Character Escaping**: 특수 문자가 올바르게 이스케이프되었는지 확인
+3. **Fallback Content**: Mermaid 검증이 실패하면 텍스트 대안을 제공
 
-### Mermaid Validation Rules
+### Mermaid 검증 룰
 ```markdown
-## BEFORE creating any file with Mermaid diagrams:
+## Mermaid 다이어그램이 포함된 파일을 생성하기 전에:
 
-1. Check for invalid characters in node IDs (use alphanumeric + underscore only)
-2. Escape special characters in labels: " → \" and ' → \'
-3. Validate flowchart syntax: node connections must be valid
-4. Test diagram parsing with simple validation
+1. 노드 ID에 잘못된 문자가 있는지 확인 (영숫자 + 언더스코어만 사용)
+2. 라벨의 특수 문자 이스케이프: " → \" 및 ' → \'
+3. 플로우차트 문법 검증: 노드 연결이 유효해야 함
+4. 간단한 검증으로 다이어그램 파싱 테스트
 
-## FALLBACK: If Mermaid validation fails, use text-based workflow representation
+## FALLBACK: Mermaid 검증이 실패하면 텍스트 기반 워크플로우 표현을 사용
 ```
 
-### Implementation Pattern
+### 구현 패턴
 ```markdown
 ## Workflow Visualization
 
-### Mermaid Diagram (if syntax valid)
+### Mermaid Diagram (문법이 유효한 경우)
 ```mermaid
-[validated diagram content]
+[검증된 다이어그램 내용]
 ```
 
-### Text Alternative (always include)
+### Text Alternative (항상 포함)
 ```
 Phase 1: INCEPTION
 - Stage 1: Workspace Detection (COMPLETED)
 - Stage 2: Requirements Analysis (COMPLETED)
-[continue with text representation]
+[텍스트 표현으로 계속]
 ```
 
-## General Content Validation
+## 일반 콘텐츠 검증
 
-### Pre-Creation Validation Checklist
-- [ ] Validate embedded code blocks (Mermaid, JSON, YAML)
-- [ ] Check special character escaping
-- [ ] Verify markdown syntax correctness
-- [ ] Test content parsing compatibility
-- [ ] Include fallback content for complex elements
+### 생성 전 검증 체크리스트
+- [ ] 임베드된 코드 블록(Mermaid, JSON, YAML) 검증
+- [ ] 특수 문자 이스케이프 확인
+- [ ] 마크다운 문법 정확성 검증
+- [ ] 콘텐츠 파싱 호환성 테스트
+- [ ] 복잡한 요소에 대한 fallback 콘텐츠 포함
 
-### Error Prevention Rules
-1. **Always validate before using tools/commands to write files**: Never write unvalidated content
-2. **Escape special characters**: Particularly in diagrams and code blocks
-3. **Provide alternatives**: Include text versions of visual content
-4. **Test syntax**: Validate complex content structures
+### 오류 예방 룰
+1. **파일 쓰기 도구/명령을 사용하기 전에 항상 검증**: 검증되지 않은 콘텐츠를 절대 쓰지 마세요.
+2. **특수 문자 이스케이프**: 특히 다이어그램과 코드 블록에서.
+3. **대안 제공**: 시각 자료에는 텍스트 버전도 포함하세요.
+4. **문법 테스트**: 복잡한 콘텐츠 구조는 검증하세요.
 
-## Validation Failure Handling
+## 검증 실패 처리
 
-### When Validation Fails
-1. **Log the error**: Record what failed validation
-2. **Use fallback content**: Switch to text-based alternative
-3. **Continue workflow**: Don't block on content validation failures
-4. **Inform user**: Mention simplified content was used due to parsing constraints
+### 검증이 실패했을 때
+1. **에러 로깅**: 무엇이 검증에 실패했는지 기록
+2. **Fallback 콘텐츠 사용**: 텍스트 기반 대안으로 전환
+3. **워크플로우 계속**: 콘텐츠 검증 실패로 워크플로우를 막지 마세요
+4. **사용자 알림**: 파싱 제약 때문에 단순화된 콘텐츠를 사용했음을 알리세요

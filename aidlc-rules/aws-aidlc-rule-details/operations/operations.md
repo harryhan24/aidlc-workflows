@@ -1,19 +1,19 @@
 # Operations
 
-**Purpose**: Placeholder for future operational phases (deployment, monitoring, maintenance)
+**목적**: 향후 운영 단계(배포, 모니터링, 유지보수)를 위한 자리표시자입니다.
 
-**Status**: This phase is currently a placeholder and will be expanded in future versions.
+**상태**: 본 단계는 현재 자리표시자이며, 추후 버전에서 확장될 예정입니다.
 
-## Future Scope
+## 향후 범위
 
-The Operations phase will eventually include:
-- Deployment planning and execution
-- Monitoring and observability setup
-- Incident response procedures
-- Maintenance and support workflows
-- Production readiness checklists
+OPERATIONS 단계는 최종적으로 다음을 포함하게 됩니다.
+- 배포 계획 및 실행
+- 모니터링 및 옵저버빌리티 구성
+- 인시던트 대응 절차
+- 유지보수 및 지원 워크플로우
+- 프로덕션 준비 상태 체크리스트
 
-## Current State
+## 현재 상태
 
-All build and test activities have been moved to the CONSTRUCTION phase.
-The AI-DLC workflow currently ends after the Build and Test phase in CONSTRUCTION.
+모든 빌드 및 테스트 활동은 CONSTRUCTION 단계로 이동되었습니다.
+AI-DLC 워크플로우는 현재 CONSTRUCTION의 Build and Test 단계 이후에 종료됩니다.

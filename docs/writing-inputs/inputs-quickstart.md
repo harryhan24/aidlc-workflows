@@ -1,165 +1,165 @@
 # AI-DLC Quick Start
 
-AI-DLC (AI-Driven Development Life Cycle) is a structured workflow that guides an AI assistant through planning, designing, and building software. Before starting a project, you provide two documents that tell the AI **what to build** and **what tools to use**.
+AI-DLC(AI-Driven Development Life Cycle)는 AI 어시스턴트가 소프트웨어를 계획, 설계, 빌드하는 과정을 가이드하는 구조화된 워크플로우입니다. 프로젝트를 시작하기 전에 AI에게 **무엇을 만들지**와 **어떤 도구를 사용할지**를 알려주는 두 개의 문서를 제공합니다.
 
 ---
 
-## What You Need to Provide
+## 제공해야 하는 것
 
-### 1. Vision Document -- what to build and why
+### 1. Vision Document -- 무엇을 왜 만드는가
 
-| Section                       | What to Write                                                              | How Long                                            |
-| ----------------------------- | -------------------------------------------------------------------------- | --------------------------------------------------- |
-| **Executive Summary**         | One paragraph: what is it, who is it for, why does it matter               | 3-5 sentences                                       |
-| **Problem Statement**         | The specific business problem this solves                                  | 1-2 paragraphs                                      |
-| **Target Users**              | Who will use it, what each user type needs                                 | A table with one row per user type                  |
-| **Success Metrics**           | How you measure whether this project succeeded                             | A table with measurable targets                     |
-| **Full Scope Vision**         | Everything the product could become at maturity, organized by feature area | As many feature areas as needed                     |
-| **MVP Scope -- Features IN**  | Every feature included in the first release, with rationale                | A table. If it is not listed, it is not in the MVP. |
-| **MVP Scope -- Features OUT** | Features deliberately excluded from MVP, with reason and target phase      | A table. This prevents scope creep.                 |
-| **Risks and Open Questions**  | What could go wrong, what is still undecided                               | Tables and bullet lists                             |
+| 섹션                              | 작성할 내용                                                                | 분량                                                       |
+| --------------------------------- | -------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| **Executive Summary**             | 한 단락: 무엇인지, 누구를 위한 것인지, 왜 중요한지                         | 3-5 문장                                                   |
+| **Problem Statement**             | 이 프로젝트가 해결하는 구체적인 비즈니스 문제                              | 1-2 단락                                                   |
+| **Target Users**                  | 누가 사용할지, 각 사용자 유형이 무엇을 필요로 하는지                       | 사용자 유형당 한 행씩 테이블                               |
+| **Success Metrics**               | 이 프로젝트가 성공했는지를 어떻게 측정할 것인가                            | 측정 가능한 목표가 있는 테이블                             |
+| **Full Scope Vision**             | 성숙 단계에서 제품이 될 수 있는 모든 것, 기능 영역별로 정리                | 필요한 만큼의 기능 영역                                    |
+| **MVP Scope -- Features IN**      | 첫 릴리스에 포함되는 모든 기능과 근거                                      | 테이블. 나열되지 않으면 MVP에 없는 것입니다.               |
+| **MVP Scope -- Features OUT**     | MVP에서 의도적으로 제외된 기능, 이유와 타겟 단계                           | 테이블. 스코프 크리프를 방지합니다.                        |
+| **Risks and Open Questions**      | 무엇이 잘못될 수 있는지, 아직 결정되지 않은 것                             | 테이블과 글머리표 리스트                                   |
 
-**Key principle**: Separate the full vision from the MVP. The full vision is aspirational. The MVP is the smallest thing that delivers value.
+**핵심 원칙**: 전체 비전과 MVP를 분리하세요. 전체 비전은 열망적입니다. MVP는 가치를 전달하는 가장 작은 것입니다.
 
-Full guide: [vision-document-guide.md](vision-document-guide.md)
-Worked example: [example-vision-scientific-calculator-api.md](example-vision-scientific-calculator-api.md)
-
----
-
-### 2. Technical Environment Document -- what tools to use
-
-| Section                       | What to Write                                                                                                                                   | How Long                                       |
-| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| **Languages**                 | Required, permitted, and prohibited languages with versions                                                                                     | A table per category                           |
-| **Frameworks and Libraries**  | Required, preferred, and prohibited with rationale and alternatives                                                                             | A table per category                           |
-| **Cloud Services**            | Allow list and disallow list of cloud services with constraints                                                                                 | A table per list                               |
-| **Architecture and Patterns** | API style, data patterns, messaging, project structure                                                                                          | Short sections with tables                     |
-| **Security**                  | Auth method, encryption, input validation, secrets management, and a chosen security compliance framework with controls documented per category | Several subsections                            |
-| **Testing**                   | Test types, coverage targets, tooling, CI/CD gates                                                                                              | Tables                                         |
-| **Example Code**              | Template code showing canonical patterns for endpoints, functions, tests, and infrastructure                                                    | Working code files in an `examples/` directory |
-
-**Key principle**: Be explicit about what is allowed and what is not. Allow lists and disallow lists prevent the AI from making assumptions.
-
-Full guide: [technical-environment-guide.md](technical-environment-guide.md)
-Worked example: [example-tech-env-scientific-calculator-api.md](example-tech-env-scientific-calculator-api.md)
+전체 가이드: [vision-document-guide.md](vision-document-guide.md)
+작업 예제: [example-vision-scientific-calculator-api.md](example-vision-scientific-calculator-api.md)
 
 ---
 
-## Minimum Viable Input
+### 2. Technical Environment Document -- 어떤 도구를 사용할 것인가
 
-If you want to start fast and fill in details later, provide at least this:
+| 섹션                              | 작성할 내용                                                                                                                                              | 분량                                                  |
+| --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| **Languages**                     | 필수, 허용, 금지 언어와 버전                                                                                                                             | 카테고리별 테이블                                     |
+| **Frameworks and Libraries**      | 필수, 선호, 금지 — 근거와 대안 포함                                                                                                                      | 카테고리별 테이블                                     |
+| **Cloud Services**                | 허용 리스트와 거부 리스트, 제약 포함                                                                                                                     | 리스트별 테이블                                       |
+| **Architecture and Patterns**     | API 스타일, 데이터 패턴, 메시징, 프로젝트 구조                                                                                                           | 테이블이 포함된 짧은 섹션                             |
+| **Security**                      | 인증 방법, 암호화, 입력 검증, 시크릿 관리, 선택한 보안 컴플라이언스 프레임워크와 카테고리별 문서화된 컨트롤                                               | 여러 서브섹션                                         |
+| **Testing**                       | 테스트 유형, 커버리지 목표, 도구, CI/CD 게이트                                                                                                           | 테이블                                                |
+| **Example Code**                  | 엔드포인트, 함수, 테스트, 인프라의 정규(canonical) 패턴을 보여주는 템플릿 코드                                                                           | `examples/` 디렉토리의 동작하는 코드 파일             |
 
-### Vision (minimum)
+**핵심 원칙**: 무엇이 허용되고 무엇이 그렇지 않은지에 대해 명시적이어야 합니다. 허용 리스트와 거부 리스트는 AI가 가정하는 것을 방지합니다.
+
+전체 가이드: [technical-environment-guide.md](technical-environment-guide.md)
+작업 예제: [example-tech-env-scientific-calculator-api.md](example-tech-env-scientific-calculator-api.md)
+
+---
+
+## 최소 입력(Minimum Viable Input)
+
+빠르게 시작하고 세부 사항을 나중에 채우고 싶다면, 최소한 다음을 제공하세요.
+
+### Vision (최소)
 
 ```text
-1. One paragraph saying what you are building and for whom
-2. A list of MVP features (what is IN scope)
-3. A list of what is NOT in the MVP
-4. Open questions -- things you already know are uncertain or unresolved
+1. 무엇을 누구를 위해 만들고 있는지 말하는 한 단락
+2. MVP 기능 리스트 (무엇이 스코프 안인지)
+3. MVP에 없는 것의 리스트
+4. 미해결 질문(Open questions) -- 이미 불확실하거나 해결되지 않은 것을 알고 있는 사항
 ```
 
-Open questions are optional but valuable. They feed directly into Requirements Analysis as pre-declared ambiguities, so AI-DLC addresses them early rather than surfacing them as surprises mid-design.
+미해결 질문은 선택이지만 가치가 있습니다. 사전 선언된 모호함으로서 Requirements Analysis에 직접 공급되므로, AI-DLC가 설계 중간에 깜짝 등장시키기보다 일찍 다룹니다.
 
-See [example-minimal-vision-scientific-calculator-api.md](example-minimal-vision-scientific-calculator-api.md) for a worked example.
+작업 예제는 [example-minimal-vision-scientific-calculator-api.md](example-minimal-vision-scientific-calculator-api.md)를 참고하세요.
 
-### Technical Environment (minimum)
+### Technical Environment (최소)
 
 ```text
-1. Language and version
-2. Package manager
-3. Web framework (if applicable)
-4. Cloud provider and deployment model (or "local only")
-5. Test framework
-6. Prohibited libraries and services -- use a table: prohibited | reason | use instead
-7. Security basics (auth method, input validation approach, secrets management)
-8. Example code patterns -- one short example each for a typical endpoint, function, and test
+1. 언어와 버전
+2. 패키지 매니저
+3. 웹 프레임워크 (해당하는 경우)
+4. 클라우드 제공자와 배포 모델 (또는 "local only")
+5. 테스트 프레임워크
+6. 금지된 라이브러리와 서비스 -- 테이블 사용: prohibited | reason | use instead
+7. Security basics (인증 방법, 입력 검증 접근, 시크릿 관리)
+8. 예제 코드 패턴 -- 전형적인 엔드포인트, 함수, 테스트에 대한 짧은 예제 각각 하나
 ```
 
-**On item 6**: including the reason and the recommended alternative is important. Without them, AI-DLC may honour the prohibition but not understand the intent well enough to make good substitution decisions.
+**항목 6에 대해**: 이유와 권장 대안을 포함하는 것이 중요합니다. 그것들이 없으면 AI-DLC가 금지를 따를 수는 있어도 좋은 치환 결정을 내릴 만큼 의도를 이해하지 못할 수 있습니다.
 
-**On item 8**: even one or two short examples give AI-DLC a concrete pattern to follow during code generation rather than inventing its own. This is the single highest-leverage addition beyond the basics.
+**항목 8에 대해**: 짧은 예제 한두 개만으로도 AI-DLC가 코드 생성 중 자체적으로 발명하지 않고 따라야 할 구체적인 패턴을 제공합니다. 이것이 기본을 넘어 단일로 가장 레버리지가 높은 추가입니다.
 
-See [example-minimal-tech-env-scientific-calculator-api.md](example-minimal-tech-env-scientific-calculator-api.md) for a worked example of both.
+두 가지 모두에 대한 작업 예제는 [example-minimal-tech-env-scientific-calculator-api.md](example-minimal-tech-env-scientific-calculator-api.md)를 참고하세요.
 
-Everything else can be answered through AI-DLC's clarifying questions during the Inception phase. The more you provide up front, the fewer questions the AI will need to ask.
+다른 모든 것은 Inception 단계 동안 AI-DLC의 명확화 질문을 통해 답할 수 있습니다. 사전에 더 많이 제공할수록 AI가 더 적게 물어보게 됩니다.
 
 ---
 
-## Brownfield Projects
+## 브라운필드 프로젝트
 
-If you are adding to or modifying an existing codebase, your inputs need to answer a different set of questions. The full guides cover brownfield in detail, but the minimum is:
+기존 코드베이스에 추가하거나 수정하는 경우, 입력 자료는 다른 질문 집합에 답해야 합니다. 전체 가이드는 브라운필드를 자세히 다루지만, 최소는 다음과 같습니다.
 
-### Vision (brownfield minimum)
+### Vision (브라운필드 최소)
 
 ```text
-1. Current state -- one paragraph describing what the system does today
-2. What we are adding or changing -- a clear description of the change
-3. Features IN scope for this iteration
-4. Features OUT of scope for this iteration
-5. What must NOT change -- existing components, APIs, or data the new work must not touch
+1. Current state -- 시스템이 오늘 무엇을 하는지 설명하는 한 단락
+2. 추가하거나 변경하는 것 -- 변경에 대한 명확한 설명
+3. 이번 이터레이션의 스코프에 있는 기능
+4. 이번 이터레이션의 스코프 밖 기능
+5. 변경되어서는 안 되는 것 -- 새 작업이 건드리지 말아야 할 기존 컴포넌트, API, 데이터
 6. Open questions
 ```
 
-The "what must not change" section is critical. AI-DLC will run a Reverse Engineering stage to analyze your existing codebase, but being explicit about boundaries prevents it from proposing changes that would destabilize working parts of the system.
+"변경되어서는 안 되는 것" 섹션이 중요합니다. AI-DLC는 기존 코드베이스를 분석하기 위해 Reverse Engineering 스테이지를 실행하겠지만, 경계에 대해 명시적으로 적어두면 시스템의 작동하는 부분을 불안정하게 만들 변경을 제안하는 것을 막아줍니다.
 
-See [example-minimal-vision-brownfield.md](example-minimal-vision-brownfield.md) for a worked example.
+작업 예제는 [example-minimal-vision-brownfield.md](example-minimal-vision-brownfield.md)를 참고하세요.
 
-### Technical Environment (brownfield minimum)
+### Technical Environment (브라운필드 최소)
 
 ```text
-1. Existing stack -- language, framework, database, infra -- with versions
-2. What to add (new services, tables, components)
-3. What must stay unchanged -- services, schemas, contracts, configs not to touch
-4. Prohibited patterns -- libraries or approaches that conflict with the existing codebase
-5. Security basics -- how auth and secrets work in the existing system
-6. Example code patterns from the existing codebase
+1. 기존 스택 -- 언어, 프레임워크, 데이터베이스, 인프라 -- 버전 포함
+2. 추가할 것 (새 서비스, 테이블, 컴포넌트)
+3. 변경되지 말아야 할 것 -- 건드리지 말아야 할 서비스, 스키마, 계약, 설정
+4. 금지된 패턴 -- 기존 코드베이스와 충돌하는 라이브러리나 접근 방식
+5. Security basics -- 기존 시스템에서 auth와 시크릿이 어떻게 작동하는지
+6. 기존 코드베이스의 예제 코드 패턴
 ```
 
-The example code patterns are especially important for brownfield. AI-DLC should generate code that looks like it belongs in the existing codebase, not code that introduces new conventions alongside old ones. Pull your examples from actual existing files.
+예제 코드 패턴은 브라운필드에 특히 중요합니다. AI-DLC는 기존 코드베이스에 속하는 코드를 생성해야지, 오래된 컨벤션 옆에 새 컨벤션을 도입해서는 안 됩니다. 예제는 실제 기존 파일에서 가져오세요.
 
-See [example-minimal-tech-env-brownfield.md](example-minimal-tech-env-brownfield.md) for a worked example.
-
----
-
-## What Happens After You Provide These Documents
-
-AI-DLC runs through two main phases:
-
-**Inception** -- understand and plan
-
-1. Detects your workspace (new project or existing code)
-2. Analyzes requirements (asks clarifying questions if anything is unclear)
-3. Creates user stories (if the project warrants them)
-4. Builds an execution plan (which stages to run, which to skip)
-5. Designs components and units of work (if complexity warrants it)
-
-**Construction** -- design and build (per unit of work)
-
-1. Functional design (business logic, domain models)
-2. NFR requirements and design (performance, security, scalability)
-3. Infrastructure design (maps to actual cloud services)
-4. Code generation (writes the code, tests, and deployment artifacts)
-5. Build and test (build instructions, test execution, verification)
-
-Every stage requires your approval before proceeding. You can request changes, add skipped stages, or redirect at any gate.
+작업 예제는 [example-minimal-tech-env-brownfield.md](example-minimal-tech-env-brownfield.md)를 참고하세요.
 
 ---
 
-## File Overview
+## 이 문서들을 제공한 후 무슨 일이 일어나는가
+
+AI-DLC는 두 개의 주요 단계를 거칩니다.
+
+**Inception** -- 이해하고 계획
+
+1. 워크스페이스를 감지 (새 프로젝트 또는 기존 코드)
+2. 요구사항 분석 (불명확한 부분이 있으면 명확화 질문)
+3. 사용자 스토리 생성 (프로젝트가 필요로 하는 경우)
+4. 실행 계획 수립 (어떤 스테이지를 실행하고 어떤 것을 건너뛸지)
+5. 컴포넌트와 unit of work 설계 (복잡도가 필요로 하는 경우)
+
+**Construction** -- 설계하고 빌드 (unit of work별)
+
+1. Functional design (비즈니스 로직, 도메인 모델)
+2. NFR requirements 및 design (성능, 보안, 확장성)
+3. Infrastructure design (실제 클라우드 서비스에 매핑)
+4. Code generation (코드, 테스트, 배포 아티팩트 작성)
+5. Build and test (빌드 지침, 테스트 실행, 검증)
+
+모든 스테이지는 진행하기 전에 당신의 승인이 필요합니다. 어떤 게이트에서든 변경 요청, 건너뛴 스테이지 추가, 또는 방향 전환을 할 수 있습니다.
+
+---
+
+## 파일 개요
 
 ```text
 docs/writing-inputs/
-  inputs-quickstart.md                               <-- You are here
-  vision-document-guide.md                           <-- How to write a vision document
-  technical-environment-guide.md                     <-- How to write a tech environment document
+  inputs-quickstart.md                               <-- 현재 위치
+  vision-document-guide.md                           <-- 비전 문서 작성 방법
+  technical-environment-guide.md                     <-- 기술 환경 문서 작성 방법
 
-  -- Greenfield examples (new project from scratch) --
-  example-vision-scientific-calculator-api.md        <-- Full example: CalcEngine vision
-  example-tech-env-scientific-calculator-api.md      <-- Full example: CalcEngine tech env
-  example-minimal-vision-scientific-calculator-api.md<-- Minimal example: CalcEngine vision
-  example-minimal-tech-env-scientific-calculator-api.md<-- Minimal example: CalcEngine tech env
+  -- 그린필드 예제 (밑바닥부터 시작하는 새 프로젝트) --
+  example-vision-scientific-calculator-api.md        <-- 전체 예제: CalcEngine 비전
+  example-tech-env-scientific-calculator-api.md      <-- 전체 예제: CalcEngine 기술 환경
+  example-minimal-vision-scientific-calculator-api.md<-- 최소 예제: CalcEngine 비전
+  example-minimal-tech-env-scientific-calculator-api.md<-- 최소 예제: CalcEngine 기술 환경
 
-  -- Brownfield examples (adding to an existing system) --
-  example-minimal-vision-brownfield.md               <-- Minimal example: returns module on existing platform
-  example-minimal-tech-env-brownfield.md             <-- Minimal example: returns module on existing platform
+  -- 브라운필드 예제 (기존 시스템에 추가) --
+  example-minimal-vision-brownfield.md               <-- 최소 예제: 기존 플랫폼의 반품 모듈
+  example-minimal-tech-env-brownfield.md             <-- 최소 예제: 기존 플랫폼의 반품 모듈
 ```

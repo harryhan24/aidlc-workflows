@@ -1,299 +1,299 @@
-# Baseline Security Rules
+# 보안 베이스라인 룰
 
-## Overview
-These security rules are MANDATORY cross-cutting constraints that apply across all AI-DLC phases. They are not optional guidance — they are hard constraints that stages MUST enforce when generating questions, producing design artifacts, generating code, and presenting completion messages.
+## 개요
+본 보안 룰은 모든 AI-DLC 단계에 적용되는 MANDATORY 횡단(cross-cutting) 제약입니다. 선택적인 가이드가 아니며, 각 스테이지가 질문 생성, 설계 아티팩트 산출, 코드 생성, 완료 메시지 표시 시 반드시 시행해야 하는 강제 제약입니다.
 
-**Enforcement**: At each applicable stage, the model MUST verify compliance with these rules before presenting the stage completion message to the user.
+**시행**: 각 적용 가능한 스테이지에서 모델은 사용자에게 스테이지 완료 메시지를 제시하기 전에 본 룰에 대한 컴플라이언스를 반드시 검증해야 합니다.
 
-### Blocking Security Finding Behavior
-A **blocking security finding** means:
-1. The finding MUST be listed in the stage completion message under a "Security Findings" section with the SECURITY rule ID and description
-2. The stage MUST NOT present the "Continue to Next Stage" option until all blocking findings are resolved
-3. The model MUST present only the "Request Changes" option with a clear explanation of what needs to change
-4. The finding MUST be logged in `aidlc-docs/audit.md` with the SECURITY rule ID, description, and stage context
+### 차단(blocking) 보안 결함 동작
+**차단 보안 결함(blocking security finding)** 은 다음을 의미합니다.
+1. 결함은 스테이지 완료 메시지의 "Security Findings" 섹션에 SECURITY 룰 ID 및 설명과 함께 반드시 나열되어야 합니다.
+2. 모든 차단 결함이 해결될 때까지 스테이지는 "Continue to Next Stage" 옵션을 절대 제시하지 않아야 합니다.
+3. 모델은 변경이 필요한 항목에 대한 명확한 설명과 함께 "Request Changes" 옵션만을 제시해야 합니다.
+4. 결함은 SECURITY 룰 ID, 설명, 스테이지 컨텍스트와 함께 `aidlc-docs/audit.md`에 반드시 기록되어야 합니다.
 
-If a SECURITY rule is not applicable to the current project (e.g., SECURITY-01 when no data stores exist), mark it as **N/A** in the compliance summary — this is not a blocking finding.
+특정 SECURITY 룰이 현재 프로젝트에 적용되지 않는 경우(예: 데이터 저장소가 존재하지 않을 때 SECURITY-01), 컴플라이언스 요약에서 **N/A**로 표시합니다. 이는 차단 결함이 아닙니다.
 
-### Default Enforcement
-All rules in this document are **blocking** by default. If any rule's verification criteria are not met, it is a blocking security finding — follow the blocking finding behavior defined above.
+### 기본 시행
+본 문서의 모든 룰은 기본적으로 **차단(blocking)** 입니다. 어떤 룰의 검증 기준이라도 충족되지 않으면 그것은 차단 보안 결함이며, 위에 정의된 차단 결함 동작을 따릅니다.
 
-### Verification Criteria Format
-Verification items in this document are plain bullet points describing compliance checks. They are distinct from the `- [ ]` / `- [x]` progress-tracking checkboxes used in stage plan files. Each item should be evaluated as compliant or non-compliant during review.
+### 검증 기준 형식
+본 문서의 검증 항목은 컴플라이언스 점검을 기술하는 일반 글머리 기호입니다. 이는 스테이지 계획 파일에서 진행 상황 추적용으로 사용되는 `- [ ]` / `- [x]` 체크박스와 구분됩니다. 각 항목은 리뷰 시 컴플라이언스 충족 여부로 평가되어야 합니다.
 
 ---
 
 ## Rule SECURITY-01: Encryption at Rest and in Transit
 
-**Rule**: Every data persistence store (databases, object storage, file systems, caches, or any equivalent) MUST have:
-- Encryption at rest enabled using a managed key service or customer-managed keys
-- Encryption in transit enforced (TLS 1.2+ for all data movement in and out of the store)
+**룰**: 모든 데이터 영속 저장소(데이터베이스, 객체 스토리지, 파일 시스템, 캐시 또는 이에 준하는 것)는 다음을 반드시 갖춰야 합니다.
+- 관리형 키 서비스 또는 고객 관리형 키를 사용한 저장 시 암호화(encryption at rest) 활성화
+- 전송 시 암호화(encryption in transit) 강제(저장소를 드나드는 모든 데이터 이동에 대해 TLS 1.2+)
 
-**Verification**:
-- No storage resource is defined without an encryption configuration block
-- No database connection string uses an unencrypted protocol
-- Object storage enforces encryption at rest and rejects non-TLS requests via policy
-- Database instances have storage encryption enabled and enforce TLS connections
+**검증**:
+- 암호화 구성 블록 없이 정의된 스토리지 리소스가 없어야 함
+- 암호화되지 않은 프로토콜을 사용하는 데이터베이스 연결 문자열이 없어야 함
+- 객체 스토리지는 저장 시 암호화를 강제하고 비(非)TLS 요청을 정책으로 거부해야 함
+- 데이터베이스 인스턴스는 스토리지 암호화가 활성화되어 있고 TLS 연결을 강제해야 함
 
 ---
 
 ## Rule SECURITY-02: Access Logging on Network Intermediaries
 
-**Rule**: Every network-facing intermediary that handles external traffic MUST have access logging enabled. This includes:
-- Load balancers → access logs to a persistent store
-- API gateways → execution logging and access logging to a centralized log service
-- CDN distributions → standard logging or real-time logs
+**룰**: 외부 트래픽을 처리하는 모든 네트워크 대면(network-facing) 중간 장치는 액세스 로깅이 반드시 활성화되어 있어야 합니다. 이에는 다음이 포함됩니다.
+- 로드 밸런서 → 영속 저장소로의 액세스 로그
+- API 게이트웨이 → 중앙 집중 로그 서비스로의 실행 로깅 및 액세스 로깅
+- CDN 배포 → 표준 로깅 또는 실시간 로그
 
-**Verification**:
-- No load balancer resource is defined without access logging enabled
-- No API gateway stage is defined without access logging configured
-- No CDN distribution is defined without logging configuration
+**검증**:
+- 액세스 로깅이 활성화되지 않은 로드 밸런서 리소스가 정의되어 있지 않아야 함
+- 액세스 로깅이 구성되지 않은 API 게이트웨이 스테이지가 정의되어 있지 않아야 함
+- 로깅 구성이 없는 CDN 배포가 정의되어 있지 않아야 함
 
 ---
 
 ## Rule SECURITY-03: Application-Level Logging
 
-**Rule**: Every deployed application component MUST include structured logging infrastructure:
-- A logging framework MUST be configured
-- Log output MUST be directed to a centralized log service
-- Logs MUST include: timestamp, correlation/request ID, log level, and message
-- Sensitive data (passwords, tokens, PII) MUST NOT appear in log output
+**룰**: 배포되는 모든 애플리케이션 컴포넌트는 구조화된 로깅 인프라를 반드시 포함해야 합니다.
+- 로깅 프레임워크가 반드시 구성되어 있어야 함
+- 로그 출력은 반드시 중앙 집중 로그 서비스로 전송되어야 함
+- 로그는 반드시 다음을 포함해야 함: 타임스탬프, 상관관계/요청 ID, 로그 레벨, 메시지
+- 민감 데이터(비밀번호, 토큰, PII)는 로그 출력에 절대 나타나지 않아야 함
 
-**Verification**:
-- Every service/function entry point includes a configured logger
-- No ad-hoc logging statements used as the primary logging mechanism in production code
-- Log configuration routes output to a centralized log service
-- No secrets, tokens, or PII are logged
+**검증**:
+- 모든 서비스/함수 진입점에 구성된 로거가 포함되어 있어야 함
+- 프로덕션 코드에서 임시(ad-hoc) 로깅 구문을 주요 로깅 메커니즘으로 사용하지 않아야 함
+- 로그 구성이 출력을 중앙 집중 로그 서비스로 라우팅해야 함
+- 시크릿, 토큰, PII가 로깅되지 않아야 함
 
 ---
 
 ## Rule SECURITY-04: HTTP Security Headers for Web Applications
 
-**Rule**: The following HTTP response headers MUST be set on all HTML-serving endpoints:
+**룰**: 모든 HTML 제공 엔드포인트에는 다음 HTTP 응답 헤더가 반드시 설정되어야 합니다.
 
-| Header | Required Value |
+| 헤더 | 필수 값 |
 |---|---|
-| `Content-Security-Policy` | Define a restrictive policy (at minimum: `default-src 'self'`) |
+| `Content-Security-Policy` | 제한적 정책 정의(최소한: `default-src 'self'`) |
 | `Strict-Transport-Security` | `max-age=31536000; includeSubDomains` |
 | `X-Content-Type-Options` | `nosniff` |
-| `X-Frame-Options` | `DENY` (or `SAMEORIGIN` if framing is required) |
+| `X-Frame-Options` | `DENY` (프레이밍이 필요한 경우 `SAMEORIGIN`) |
 | `Referrer-Policy` | `strict-origin-when-cross-origin` |
 
-**Note**: `X-XSS-Protection` is deprecated in modern browsers. Use `Content-Security-Policy` instead.
+**참고**: `X-XSS-Protection`은 최신 브라우저에서 deprecated입니다. 대신 `Content-Security-Policy`를 사용하십시오.
 
-**Verification**:
-- Middleware or response interceptor sets all required headers
-- CSP policy does not use `unsafe-inline` or `unsafe-eval` without documented justification
-- HSTS max-age is at least 31536000 (1 year)
+**검증**:
+- 미들웨어 또는 응답 인터셉터가 모든 필수 헤더를 설정해야 함
+- CSP 정책이 문서화된 정당화 없이 `unsafe-inline` 또는 `unsafe-eval`을 사용하지 않아야 함
+- HSTS max-age는 최소 31536000(1년) 이상이어야 함
 
 ---
 
 ## Rule SECURITY-05: Input Validation on All API Parameters
 
-**Rule**: Every API endpoint (REST, GraphQL, gRPC, WebSocket) MUST validate all input parameters before processing. Validation MUST include:
-- **Type checking**: Reject unexpected types
-- **Length/size bounds**: Enforce maximum lengths on strings, maximum sizes on arrays and payloads
-- **Format validation**: Use allowlists (regex or schema) for structured inputs (emails, dates, IDs)
-- **Sanitization**: Escape or reject HTML/script content in user-supplied strings to prevent XSS
-- **Injection prevention**: Use parameterized queries for all database operations (never string concatenation)
+**룰**: 모든 API 엔드포인트(REST, GraphQL, gRPC, WebSocket)는 처리 전에 모든 입력 파라미터를 반드시 검증해야 합니다. 검증은 반드시 다음을 포함해야 합니다.
+- **타입 체크**: 예상하지 못한 타입은 거부
+- **길이/크기 제한**: 문자열의 최대 길이, 배열 및 페이로드의 최대 크기 강제
+- **포맷 검증**: 구조화된 입력(이메일, 날짜, ID)에 대해 허용 목록(정규표현식 또는 스키마) 사용
+- **새니타이즈**: 사용자 제공 문자열의 HTML/스크립트 콘텐츠를 이스케이프하거나 거부하여 XSS 방지
+- **인젝션 방지**: 모든 데이터베이스 작업에 매개변수화 쿼리 사용(문자열 결합은 절대 금지)
 
-**Verification**:
-- Every API handler uses a validation library or schema
-- No raw user input is concatenated into SQL, NoSQL, or OS commands
-- String inputs have explicit max-length constraints
-- Request body size limits are configured at the framework or gateway level
+**검증**:
+- 모든 API 핸들러가 검증 라이브러리 또는 스키마를 사용해야 함
+- 원시 사용자 입력이 SQL, NoSQL, OS 명령에 결합되지 않아야 함
+- 문자열 입력에 명시적인 최대 길이 제약이 있어야 함
+- 요청 본문 크기 제한이 프레임워크 또는 게이트웨이 수준에서 구성되어 있어야 함
 
 ---
 
 ## Rule SECURITY-06: Least-Privilege Access Policies
 
-**Rule**: Every identity and access management policy, role, or permission boundary MUST follow least privilege:
-- Use specific resource identifiers — NEVER use wildcard resources unless the API does not support resource-level permissions (document the exception)
-- Use specific actions — NEVER use wildcard actions
-- Scope conditions where possible
-- Separate read and write permissions into distinct policy statements
+**룰**: 모든 자격 증명 및 액세스 관리 정책, 역할, 권한 경계는 최소 권한 원칙을 반드시 따라야 합니다.
+- 구체적인 리소스 식별자를 사용하십시오. API가 리소스 수준 권한을 지원하지 않는 경우를 제외하고 와일드카드 리소스는 절대 사용하지 마십시오(예외는 문서화).
+- 구체적인 액션을 사용하십시오. 와일드카드 액션은 절대 사용하지 마십시오.
+- 가능한 곳에서는 조건(condition)으로 범위를 좁히십시오.
+- 읽기 권한과 쓰기 권한을 별도의 정책 구문으로 분리하십시오.
 
-**Verification**:
-- No policy contains wildcard actions or wildcard resources without a documented exception
-- No service role has broader permissions than what the service actually calls
-- Inline policies are avoided in favor of managed policies where possible
-- Every role has a trust policy scoped to the specific service or account
+**검증**:
+- 문서화된 예외 없이 와일드카드 액션이나 와일드카드 리소스를 포함하는 정책이 없어야 함
+- 어떤 서비스 역할도 서비스가 실제로 호출하는 것보다 더 넓은 권한을 갖지 않아야 함
+- 가능한 곳에서는 인라인 정책 대신 관리형 정책을 사용해야 함
+- 모든 역할이 특정 서비스 또는 계정으로 범위가 좁혀진 신뢰 정책을 가져야 함
 
 ---
 
 ## Rule SECURITY-07: Restrictive Network Configuration
 
-**Rule**: All network configurations (security groups, network ACLs, route tables) MUST follow deny-by-default:
-- Firewall rules: Only open specific ports required by the application
-- No inbound rule with source `0.0.0.0/0` except for public-facing load balancers on ports 80/443
-- No outbound rule with `0.0.0.0/0` on all ports unless explicitly justified
-- Private subnets MUST NOT have direct internet gateway routes
-- Use private endpoints for cloud service access where available
+**룰**: 모든 네트워크 구성(보안 그룹, 네트워크 ACL, 라우트 테이블)은 기본 거부(deny-by-default)를 반드시 따라야 합니다.
+- 방화벽 룰: 애플리케이션에 필요한 특정 포트만 개방
+- 퍼블릭 대면 로드 밸런서의 80/443 포트를 제외하고 소스 `0.0.0.0/0`인 인바운드 룰 금지
+- 명시적으로 정당화되지 않는 한 모든 포트에 대한 `0.0.0.0/0` 아웃바운드 룰 금지
+- 프라이빗 서브넷은 인터넷 게이트웨이로의 직접 라우트를 가져서는 안 됨
+- 가능한 경우 클라우드 서비스 액세스에 프라이빗 엔드포인트 사용
 
-**Verification**:
-- No firewall rule allows inbound `0.0.0.0/0` on any port other than 80/443 on a public load balancer
-- Database and application firewall rules restrict source to specific CIDR blocks or security group references
-- Private subnets route through a NAT gateway (not an internet gateway)
-- Private endpoints are used for high-traffic cloud service calls
+**검증**:
+- 퍼블릭 로드 밸런서의 80/443 외 어떤 포트에서도 인바운드 `0.0.0.0/0`을 허용하는 방화벽 룰이 없어야 함
+- 데이터베이스 및 애플리케이션 방화벽 룰이 소스를 특정 CIDR 블록 또는 보안 그룹 참조로 제한해야 함
+- 프라이빗 서브넷이 인터넷 게이트웨이가 아닌 NAT 게이트웨이를 통해 라우팅되어야 함
+- 트래픽이 높은 클라우드 서비스 호출에 프라이빗 엔드포인트가 사용되어야 함
 
 ---
 
 ## Rule SECURITY-08: Application-Level Access Control
 
-**Rule**: Every application endpoint that accesses or mutates a resource MUST enforce authorization checks at the application layer:
-- **Deny by default**: All routes/endpoints MUST require authentication unless explicitly marked as public
-- **Object-level authorization**: Every request that references a resource by ID MUST verify the requesting user/principal owns or has permission to access that resource (prevent IDOR)
-- **Function-level authorization**: Administrative or privileged operations MUST check the caller's role/permissions server-side — never rely on client-side hiding
-- **CORS policy**: Cross-origin resource sharing MUST be restricted to explicitly allowed origins — never use `Access-Control-Allow-Origin: *` on authenticated endpoints
-- **Token validation**: JWTs or session tokens MUST be validated server-side on every request (signature, expiration, audience, issuer)
+**룰**: 리소스에 액세스하거나 이를 변경하는 모든 애플리케이션 엔드포인트는 애플리케이션 계층에서 권한 검사(authorization)를 반드시 시행해야 합니다.
+- **기본 거부(Deny by default)**: 모든 라우트/엔드포인트는 명시적으로 퍼블릭으로 표시된 경우를 제외하고 반드시 인증을 요구해야 함
+- **객체 수준 권한 검사**: ID로 리소스를 참조하는 모든 요청은 요청 사용자/주체가 해당 리소스를 소유하거나 액세스할 권한이 있는지 반드시 검증해야 함(IDOR 방지)
+- **함수 수준 권한 검사**: 관리자/특권 작업은 서버 측에서 호출자의 역할/권한을 반드시 검사해야 하며, 클라이언트 측 숨김에 의존해서는 안 됨
+- **CORS 정책**: 교차 출처 리소스 공유(cross-origin resource sharing)는 명시적으로 허용된 출처로 반드시 제한되어야 하며, 인증된 엔드포인트에 `Access-Control-Allow-Origin: *`을 절대 사용하지 않아야 함
+- **토큰 검증**: JWT 또는 세션 토큰은 모든 요청에서 서버 측 검증(서명, 만료, 대상, 발급자)을 반드시 수행해야 함
 
-**Verification**:
-- Every controller/handler has an authorization middleware or guard applied
-- No endpoint returns data for a resource ID without verifying the caller's ownership or permission
-- Admin/privileged routes have explicit role checks enforced server-side
-- CORS configuration does not use wildcard origins on authenticated endpoints
-- Token validation occurs server-side on every request (not just at login)
+**검증**:
+- 모든 컨트롤러/핸들러에 권한 미들웨어 또는 가드가 적용되어 있어야 함
+- 호출자의 소유권 또는 권한을 검증하지 않고 리소스 ID에 대한 데이터를 반환하는 엔드포인트가 없어야 함
+- 관리자/특권 라우트가 서버 측에서 명시적인 역할 검사를 시행해야 함
+- CORS 구성이 인증된 엔드포인트에 와일드카드 출처를 사용하지 않아야 함
+- 토큰 검증이 로그인 시점만이 아니라 모든 요청에서 서버 측에서 수행되어야 함
 
 ---
 
 ## Rule SECURITY-09: Security Hardening and Misconfiguration Prevention
 
-**Rule**: All deployed components MUST follow a hardening baseline:
-- **No default credentials**: Default usernames/passwords MUST be changed or disabled before deployment
-- **Minimal installation**: Remove or disable unused features, frameworks, sample applications, and documentation endpoints
-- **Error handling**: Production error responses MUST NOT expose stack traces, internal paths, framework versions, or database details to end users
-- **Directory listing**: Web servers MUST disable directory listing
-- **Cloud storage**: Cloud object storage MUST block public access unless explicitly required and documented
-- **Patch management**: Runtime environments, frameworks, and OS images MUST use current, supported versions
+**룰**: 배포된 모든 컴포넌트는 하드닝 베이스라인을 반드시 따라야 합니다.
+- **기본 자격 증명 금지**: 기본 사용자명/비밀번호는 배포 전에 반드시 변경되거나 비활성화되어야 함
+- **최소 설치**: 사용하지 않는 기능, 프레임워크, 샘플 애플리케이션, 문서 엔드포인트를 제거하거나 비활성화
+- **에러 처리**: 프로덕션 에러 응답은 스택 트레이스, 내부 경로, 프레임워크 버전, 데이터베이스 세부 정보를 최종 사용자에게 절대 노출하지 않아야 함
+- **디렉터리 리스팅**: 웹 서버는 디렉터리 리스팅을 반드시 비활성화해야 함
+- **클라우드 스토리지**: 클라우드 객체 스토리지는 명시적으로 필요하고 문서화된 경우를 제외하고 반드시 퍼블릭 액세스를 차단해야 함
+- **패치 관리**: 런타임 환경, 프레임워크, OS 이미지는 반드시 현재 지원되는 버전을 사용해야 함
 
-**Verification**:
-- No default credentials exist in configuration files, environment variables, or IaC templates
-- Error responses in production return generic messages (no stack traces or internal details)
-- Cloud object storage has public access blocked unless a documented exception exists
-- No sample/demo applications or default pages are deployed
-- Framework and runtime versions are current and supported
+**검증**:
+- 구성 파일, 환경 변수, IaC 템플릿에 기본 자격 증명이 존재하지 않아야 함
+- 프로덕션의 에러 응답이 일반적인 메시지를 반환해야 함(스택 트레이스 및 내부 세부 정보 없음)
+- 문서화된 예외가 없는 한 클라우드 객체 스토리지의 퍼블릭 액세스가 차단되어 있어야 함
+- 샘플/데모 애플리케이션 또는 기본 페이지가 배포되어 있지 않아야 함
+- 프레임워크와 런타임 버전이 현재 지원되는 버전이어야 함
 
 
 ---
 
 ## Rule SECURITY-10: Software Supply Chain Security
 
-**Rule**: Every project MUST manage its software supply chain:
-- **Dependency pinning**: All dependencies MUST use exact versions or lock files
-- **Vulnerability scanning**: A dependency vulnerability scanner MUST be configured 
-- **No unused dependencies**: Remove packages that are not actively used
-- **Trusted sources only**: Dependencies MUST be pulled from official registries or verified private registries — no unvetted third-party sources
-- **SBOM**: Projects MUST generate a Software Bill of Materials for production deployments
-- **CI/CD integrity**: Build pipelines MUST use pinned tool versions and verified base images — no `latest` tags in production Dockerfiles or CI configurations
+**룰**: 모든 프로젝트는 소프트웨어 공급망을 반드시 관리해야 합니다.
+- **의존성 고정(pinning)**: 모든 의존성은 정확한 버전 또는 락 파일을 반드시 사용해야 함
+- **취약점 스캔**: 의존성 취약점 스캐너가 반드시 구성되어 있어야 함
+- **사용되지 않는 의존성 금지**: 실제로 사용되지 않는 패키지를 제거
+- **신뢰할 수 있는 출처만**: 의존성은 공식 레지스트리 또는 검증된 사설 레지스트리에서만 반드시 가져와야 함. 검증되지 않은 서드파티 출처 금지
+- **SBOM**: 프로젝트는 프로덕션 배포를 위해 반드시 Software Bill of Materials를 생성해야 함
+- **CI/CD 무결성**: 빌드 파이프라인은 고정된 도구 버전 및 검증된 베이스 이미지를 반드시 사용해야 함. 프로덕션 Dockerfile 또는 CI 구성에서 `latest` 태그 금지
 
-**Verification**:
-- A lock file exists and is committed to version control
-- A dependency vulnerability scanning step is included in CI/CD or documented in build instructions
-- No unused or abandoned dependencies are included
-- Dockerfiles and CI configs do not use `latest` or unpinned image tags for production
-- Dependencies are sourced from official or verified registries
+**검증**:
+- 락 파일이 존재하고 버전 관리에 커밋되어 있어야 함
+- 의존성 취약점 스캔 단계가 CI/CD에 포함되어 있거나 빌드 지침에 문서화되어 있어야 함
+- 사용되지 않거나 폐기된 의존성이 포함되어 있지 않아야 함
+- Dockerfile 및 CI 구성이 프로덕션용으로 `latest` 또는 고정되지 않은 이미지 태그를 사용하지 않아야 함
+- 의존성이 공식 또는 검증된 레지스트리에서 조달되어야 함
 
 ---
 
 ## Rule SECURITY-11: Secure Design Principles
 
-**Rule**: Application design MUST incorporate security from the start:
-- **Separation of concerns**: Security-critical logic (authentication, authorization, payment processing) MUST be isolated in dedicated modules — not scattered across the codebase
-- **Defense in depth**: No single control should be the sole line of defense — layer controls (validation + authorization + encryption)
-- **Rate limiting**: Public-facing endpoints MUST implement rate limiting or throttling to prevent abuse
-- **Business logic abuse**: Design MUST consider misuse cases — not just happy-path scenarios
+**룰**: 애플리케이션 설계는 처음부터 보안을 반드시 포함해야 합니다.
+- **관심사 분리**: 보안에 중요한 로직(인증, 권한 부여, 결제 처리)은 코드베이스 전반에 흩어져 있지 않고 전용 모듈에 반드시 격리되어야 함
+- **다층 방어(Defense in depth)**: 단일 통제가 유일한 방어선이 되어서는 안 됨. 통제를 계층화(검증 + 권한 검사 + 암호화)
+- **레이트 리미팅**: 퍼블릭 대면 엔드포인트는 남용을 방지하기 위해 레이트 리미팅 또는 스로틀링을 반드시 구현해야 함
+- **비즈니스 로직 남용**: 설계는 해피 패스 시나리오뿐만 아니라 오용 사례도 반드시 고려해야 함
 
-**Verification**:
-- Security-critical logic is encapsulated in dedicated modules or services
-- Rate limiting is configured on public-facing APIs
-- Design documentation addresses at least one misuse/abuse scenario
+**검증**:
+- 보안에 중요한 로직이 전용 모듈 또는 서비스로 캡슐화되어 있어야 함
+- 퍼블릭 대면 API에 레이트 리미팅이 구성되어 있어야 함
+- 설계 문서가 최소한 하나의 오용/남용 시나리오를 다루어야 함
 
 ---
 
 ## Rule SECURITY-12: Authentication and Credential Management
 
-**Rule**: Every application with user authentication MUST implement:
-- **Password policy**: Minimum 8 characters, check against breached password lists
-- **Credential storage**: Passwords MUST be hashed using adaptive algorithms — never weak or non-adaptive hashing
-- **Multi-factor authentication**: MFA MUST be supported for administrative accounts and SHOULD be available for all users
-- **Session management**: Sessions MUST have server-side expiration, be invalidated on logout, and use secure/httpOnly/sameSite cookie attributes
-- **Brute-force protection**: Login endpoints MUST implement account lockout, progressive delays, or CAPTCHA after repeated failures
-- **No hardcoded credentials**: No passwords, API keys, or secrets in source code or IaC templates — use a secrets manager
+**룰**: 사용자 인증이 있는 모든 애플리케이션은 다음을 반드시 구현해야 합니다.
+- **비밀번호 정책**: 최소 8자, 유출 비밀번호 목록 대조 검사
+- **자격 증명 저장**: 비밀번호는 적응형(adaptive) 알고리즘으로 반드시 해시되어야 함. 약하거나 비적응형 해시 금지
+- **다중 인증(MFA)**: 관리자 계정에 대해 MFA를 반드시 지원해야 하며, 모든 사용자에게도 제공되어야(SHOULD) 함
+- **세션 관리**: 세션은 서버 측 만료를 가져야 하며, 로그아웃 시 무효화되어야 하고, secure/httpOnly/sameSite 쿠키 속성을 사용해야 함
+- **무차별 대입 보호**: 로그인 엔드포인트는 반복 실패 후 계정 잠금, 점진적 지연, CAPTCHA를 반드시 구현해야 함
+- **하드코딩된 자격 증명 금지**: 소스 코드 또는 IaC 템플릿에 비밀번호, API 키, 시크릿 금지. 시크릿 매니저 사용
 
-**Verification**:
-- Password hashing uses adaptive algorithms (not weak or non-adaptive hashing)
-- Session cookies set `Secure`, `HttpOnly`, and `SameSite` attributes
-- Login endpoints have brute-force protection (lockout, delay, or CAPTCHA)
-- No hardcoded credentials in source code or configuration files
-- MFA is supported for admin accounts
-- Sessions are invalidated on logout and have a defined expiration
+**검증**:
+- 비밀번호 해싱이 적응형 알고리즘을 사용해야 함(약하거나 비적응형 해시 아님)
+- 세션 쿠키가 `Secure`, `HttpOnly`, `SameSite` 속성을 설정해야 함
+- 로그인 엔드포인트에 무차별 대입 보호(잠금, 지연, CAPTCHA)가 있어야 함
+- 소스 코드 또는 구성 파일에 하드코딩된 자격 증명이 없어야 함
+- 관리자 계정에 대해 MFA가 지원되어야 함
+- 세션이 로그아웃 시 무효화되고 정의된 만료가 있어야 함
 
 ---
 
 ## Rule SECURITY-13: Software and Data Integrity Verification
 
-**Rule**: Systems MUST verify the integrity of software and data:
-- **Deserialization safety**: Untrusted data MUST NOT be deserialized without validation — use safe deserialization libraries or allowlists of permitted types
-- **Artifact integrity**: Downloaded dependencies, plugins, and updates MUST be verified via checksums or digital signatures
-- **CI/CD pipeline security**: Build pipelines MUST restrict who can modify pipeline definitions — separate duties between code authors and deployment approvers
-- **CDN and external resources**: Scripts or resources loaded from external CDNs MUST use Subresource Integrity (SRI) hashes
-- **Data integrity**: Critical data modifications MUST be auditable (who changed what, when)
+**룰**: 시스템은 소프트웨어와 데이터의 무결성을 반드시 검증해야 합니다.
+- **역직렬화 안전성**: 신뢰할 수 없는 데이터는 검증 없이 절대 역직렬화되어서는 안 됨. 안전한 역직렬화 라이브러리 또는 허용된 타입의 허용 목록 사용
+- **아티팩트 무결성**: 다운로드된 의존성, 플러그인, 업데이트는 체크섬 또는 디지털 서명으로 반드시 검증되어야 함
+- **CI/CD 파이프라인 보안**: 빌드 파이프라인은 파이프라인 정의를 수정할 수 있는 주체를 반드시 제한해야 함. 코드 작성자와 배포 승인자 간 직무 분리
+- **CDN 및 외부 리소스**: 외부 CDN에서 로드되는 스크립트나 리소스는 Subresource Integrity(SRI) 해시를 반드시 사용해야 함
+- **데이터 무결성**: 중요 데이터 변경은 감사 가능해야 함(누가 무엇을 언제 변경했는지)
 
-**Verification**:
-- No unsafe deserialization of untrusted input
-- External scripts include SRI integrity attributes when loaded from CDNs
-- CI/CD pipeline definitions are access-controlled and changes are auditable
-- Critical data changes are logged with actor, timestamp, and before/after values
+**검증**:
+- 신뢰할 수 없는 입력에 대한 안전하지 않은 역직렬화가 없어야 함
+- CDN에서 로드되는 외부 스크립트는 SRI 무결성 속성을 포함해야 함
+- CI/CD 파이프라인 정의가 액세스 통제되고 변경이 감사 가능해야 함
+- 중요 데이터 변경이 행위자, 타임스탬프, 변경 전/후 값과 함께 로깅되어야 함
 
 ---
 
 ## Rule SECURITY-14: Alerting and Monitoring
 
-**Rule**: In addition to logging (SECURITY-02, SECURITY-03), systems MUST include:
-- **Security event alerting**: Alerts MUST be configured for high-value security events: repeated authentication failures, privilege escalation attempts, access from unusual locations, and authorization failures
-- **Log integrity**: Logs MUST be stored in append-only or tamper-evident storage — application code MUST NOT be able to delete or modify its own audit logs
-- **Log retention**: Logs MUST be retained for a minimum period appropriate to the application's compliance requirements (default: 90 days minimum)
-- **Monitoring dashboards**: A monitoring dashboard or alarm configuration MUST be defined for key operational and security metrics
+**룰**: 로깅(SECURITY-02, SECURITY-03)에 더하여 시스템은 다음을 반드시 포함해야 합니다.
+- **보안 이벤트 알림**: 고가치 보안 이벤트(반복적인 인증 실패, 권한 상승 시도, 비정상 위치로부터의 액세스, 권한 검사 실패)에 대한 알림이 반드시 구성되어 있어야 함
+- **로그 무결성**: 로그는 추가 전용(append-only) 또는 변조 감지 가능 스토리지에 반드시 저장되어야 함. 애플리케이션 코드는 자신의 감사 로그를 삭제하거나 수정할 수 있어서는 안 됨
+- **로그 보존**: 로그는 애플리케이션의 컴플라이언스 요구사항에 맞는 최소 기간 동안 반드시 보존되어야 함(기본값: 최소 90일)
+- **모니터링 대시보드**: 주요 운영 및 보안 메트릭에 대해 모니터링 대시보드 또는 알람 구성이 반드시 정의되어야 함
 
-**Verification**:
-- Alerting is configured for authentication failures and authorization violations
-- Application log groups have retention policies set (minimum 90 days)
-- Application roles do not have permission to delete their own log groups/streams
-- Security-relevant events (login failures, access denied, privilege changes) generate alerts
+**검증**:
+- 인증 실패 및 권한 위반에 대해 알림이 구성되어 있어야 함
+- 애플리케이션 로그 그룹에 보존 정책(최소 90일)이 설정되어 있어야 함
+- 애플리케이션 역할이 자신의 로그 그룹/스트림을 삭제할 권한을 가지지 않아야 함
+- 보안 관련 이벤트(로그인 실패, 액세스 거부, 권한 변경)가 알림을 생성해야 함
 
 ---
 
 ## Rule SECURITY-15: Exception Handling and Fail-Safe Defaults
 
-**Rule**: Every application MUST handle exceptional conditions safely:
-- **Catch and handle**: All external calls (database, API, file I/O) MUST have explicit error handling — no unhandled promise rejections or uncaught exceptions in production
-- **Fail closed**: On error, the system MUST deny access or halt the operation — never fail open
-- **Resource cleanup**: Error paths MUST release resources (connections, file handles, locks) — use try/finally, using statements, or equivalent patterns
-- **User-facing errors**: Error messages shown to users MUST be generic — no internal details or system information
-- **Global error handler**: Applications MUST have a global/top-level error handler that catches unhandled exceptions, logs them (per SECURITY-03), and returns a safe response
+**룰**: 모든 애플리케이션은 예외 조건을 안전하게 처리해야 합니다.
+- **포착 및 처리**: 모든 외부 호출(데이터베이스, API, 파일 I/O)은 명시적인 에러 처리를 반드시 가져야 함. 프로덕션에서 처리되지 않은 promise rejection 또는 포착되지 않은 예외 금지
+- **실패 시 차단(Fail closed)**: 에러 발생 시 시스템은 액세스를 거부하거나 작업을 중단해야 함. fail open은 절대 금지
+- **리소스 정리**: 에러 경로는 리소스(연결, 파일 핸들, 락)를 반드시 해제해야 함. try/finally, using 구문 또는 이에 준하는 패턴 사용
+- **사용자 노출 에러**: 사용자에게 표시되는 에러 메시지는 반드시 일반적이어야 함. 내부 세부 정보 또는 시스템 정보 금지
+- **전역 에러 핸들러**: 애플리케이션은 처리되지 않은 예외를 포착하고, 이를 로깅하며(SECURITY-03에 따라), 안전한 응답을 반환하는 전역/최상위 에러 핸들러를 반드시 가져야 함
 
-**Verification**:
-- All external calls (DB, HTTP, file I/O) have explicit error handling (try/catch, .catch(), error callbacks)
-- A global error handler is configured at the application entry point
-- Error paths do not bypass authorization or validation checks (fail closed)
-- Resources are cleaned up in error paths (connections closed, transactions rolled back)
-- No unhandled promise rejections or uncaught exception warnings in application code
-
----
-
-## Enforcement Integration
-
-These rules are cross-cutting constraints that apply to every AI-DLC stage. At each stage:
-- Evaluate all SECURITY rule verification criteria against the artifacts produced
-- Include a "Security Compliance" section in the stage completion summary listing each rule as compliant, non-compliant, or N/A
-- If any rule is non-compliant, this is a blocking security finding — follow the blocking finding behavior defined in the Overview
-- Include security rule references in design documentation and test instructions
+**검증**:
+- 모든 외부 호출(DB, HTTP, 파일 I/O)이 명시적인 에러 처리(try/catch, .catch(), 에러 콜백)를 가져야 함
+- 애플리케이션 진입점에 전역 에러 핸들러가 구성되어 있어야 함
+- 에러 경로가 권한 검사 또는 검증을 우회하지 않아야 함(fail closed)
+- 에러 경로에서 리소스가 정리되어야 함(연결 닫힘, 트랜잭션 롤백)
+- 애플리케이션 코드에 처리되지 않은 promise rejection 또는 포착되지 않은 예외 경고가 없어야 함
 
 ---
 
-## Appendix: OWASP Reference Mapping
+## 시행 통합
+
+본 룰은 모든 AI-DLC 스테이지에 적용되는 횡단 제약입니다. 각 스테이지에서:
+- 생성된 아티팩트에 대해 모든 SECURITY 룰 검증 기준을 평가합니다.
+- 스테이지 완료 요약에 각 룰을 compliant, non-compliant 또는 N/A로 나열하는 "Security Compliance" 섹션을 포함합니다.
+- 어떤 룰이라도 non-compliant인 경우 이는 차단 보안 결함이며, Overview에 정의된 차단 결함 동작을 따릅니다.
+- 설계 문서 및 테스트 지침에 보안 룰 참조를 포함합니다.
+
+---
+
+## 부록: OWASP 참조 매핑
 
 <!-- TODO: CRITICAL - This entire OWASP mapping table needs verification. The "2025" edition may not exist; the latest published OWASP Top 10 is 2021. Category IDs (A01-A10), numbering, and names must be validated against the actual published standard before relying on this mapping. -->
-For human reviewers, the following maps SECURITY rules to OWASP Top 10 (2025) categories:
+사람 리뷰어를 위해 다음은 SECURITY 룰을 OWASP Top 10(2025) 카테고리에 매핑한 것입니다.
 
 | SECURITY Rule | OWASP Category |
 |---|---|

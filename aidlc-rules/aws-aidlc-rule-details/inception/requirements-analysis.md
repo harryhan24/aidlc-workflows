@@ -1,101 +1,101 @@
-# Requirements Analysis (Adaptive)
+# Requirements Analysis (Adaptive, 요구사항 분석)
 
-**Assume the role** of a product owner
+**역할 가정**: 프로덕트 오너(product owner)의 역할을 맡으세요.
 
-**Adaptive Phase**: Always executes. Detail level adapts to problem complexity.
+**적응형 단계 (Adaptive Phase)**: 항상 실행됩니다. 세부 수준은 문제 복잡도에 따라 달라집니다.
 
-**See [depth-levels.md](../common/depth-levels.md) for adaptive depth explanation**
+**적응형 깊이 설명은 [depth-levels.md](../common/depth-levels.md) 참고.**
 
-## Prerequisites
-- Workspace Detection must be complete
-- Reverse Engineering must be complete (if brownfield)
+## 전제 조건
+- Workspace Detection이 완료되어야 함
+- (brownfield인 경우) Reverse Engineering이 완료되어야 함
 
-## Execution Steps
+## 실행 단계
 
-### Step 1: Load Reverse Engineering Context (if available)
+### Step 1: 리버스 엔지니어링 컨텍스트 로드 (가능한 경우)
 
-**IF brownfield project**:
-- Load `aidlc-docs/inception/reverse-engineering/architecture.md`
-- Load `aidlc-docs/inception/reverse-engineering/component-inventory.md`
-- Load `aidlc-docs/inception/reverse-engineering/technology-stack.md`
-- Use these to understand existing system when analyzing request
+**brownfield 프로젝트라면**:
+- `aidlc-docs/inception/reverse-engineering/architecture.md` 로드
+- `aidlc-docs/inception/reverse-engineering/component-inventory.md` 로드
+- `aidlc-docs/inception/reverse-engineering/technology-stack.md` 로드
+- 요청을 분석할 때 기존 시스템을 이해하는 데 사용
 
-### Step 2: Analyze User Request (Intent Analysis)
+### Step 2: 사용자 요청 분석 (Intent Analysis)
 
-#### 2.1 Request Clarity
-- **Clear**: Specific, well-defined, actionable
-- **Vague**: General, ambiguous, needs clarification
-- **Incomplete**: Missing key information
+#### 2.1 요청 명확성
+- **Clear (명확)**: 구체적이고 잘 정의되어 있으며 실행 가능
+- **Vague (모호)**: 일반적, 모호함, 명확화 필요
+- **Incomplete (불완전)**: 핵심 정보 누락
 
-#### 2.2 Request Type
-- **New Feature**: Adding new functionality
-- **Bug Fix**: Fixing existing issue
-- **Refactoring**: Improving code structure
-- **Upgrade**: Updating dependencies or frameworks
-- **Migration**: Moving to different technology
-- **Enhancement**: Improving existing feature
-- **New Project**: Starting from scratch
+#### 2.2 요청 유형
+- **New Feature**: 새 기능 추가
+- **Bug Fix**: 기존 이슈 수정
+- **Refactoring**: 코드 구조 개선
+- **Upgrade**: 의존성 또는 프레임워크 업데이트
+- **Migration**: 다른 기술로 이전
+- **Enhancement**: 기존 기능 개선
+- **New Project**: 처음부터 시작
 
-#### 2.3 Initial Scope Estimate
-- **Single File**: Changes to one file
-- **Single Component**: Changes to one component/package
-- **Multiple Components**: Changes across multiple components
-- **System-wide**: Changes affecting entire system
-- **Cross-system**: Changes affecting multiple systems
+#### 2.3 초기 범위 추정
+- **Single File**: 한 파일에만 변경
+- **Single Component**: 한 컴포넌트/패키지에 변경
+- **Multiple Components**: 여러 컴포넌트에 걸친 변경
+- **System-wide**: 시스템 전체에 영향을 주는 변경
+- **Cross-system**: 여러 시스템에 영향을 주는 변경
 
-#### 2.4 Initial Complexity Estimate
-- **Trivial**: Simple, straightforward change
-- **Simple**: Clear implementation path
-- **Moderate**: Some complexity, multiple considerations
-- **Complex**: Significant complexity, many considerations
+#### 2.4 초기 복잡도 추정
+- **Trivial**: 단순하고 직관적인 변경
+- **Simple**: 구현 경로가 명확
+- **Moderate**: 일정 수준의 복잡도, 여러 고려사항
+- **Complex**: 상당한 복잡도, 많은 고려사항
 
-### Step 3: Determine Requirements Depth
+### Step 3: 요구사항 깊이 결정
 
-**Based on request analysis, determine depth:**
+**요청 분석을 기반으로 깊이를 결정합니다:**
 
-**Minimal Depth** - Use when:
-- Request is clear and simple
-- No detailed requirements needed
-- Just document the basic understanding
+**Minimal Depth** - 다음일 때 사용:
+- 요청이 명확하고 단순함
+- 상세 요구사항이 필요 없음
+- 기본 이해만 문서화
 
-**Standard Depth** - Use when:
-- Request needs clarification
-- Functional and non-functional requirements needed
-- Normal complexity
+**Standard Depth** - 다음일 때 사용:
+- 요청에 명확화가 필요
+- 기능/비기능 요구사항이 필요
+- 보통 복잡도
 
-**Comprehensive Depth** - Use when:
-- Complex project with multiple stakeholders
-- High risk or critical system
-- Detailed requirements with traceability needed
+**Comprehensive Depth** - 다음일 때 사용:
+- 이해관계자가 여러 명인 복잡한 프로젝트
+- 고위험 또는 중요(critical) 시스템
+- 추적성을 갖춘 상세 요구사항이 필요
 
-### Step 4: Assess Current Requirements
+### Step 4: 현재 요구사항 평가
 
-Analyze whatever the user has provided:
-   - Intent statements or descriptions (already logged in audit.md)
-   - Existing requirements documents (search workspace if mentioned)
-   - Pasted content or file references
-   - Convert any non-markdown documents to markdown format 
+사용자가 제공한 모든 것을 분석합니다:
+   - 의도 표현 또는 설명 (이미 audit.md에 로깅되어 있음)
+   - 기존 요구사항 문서 (언급되었다면 워크스페이스 검색)
+   - 붙여넣은 콘텐츠 또는 파일 참조
+   - 마크다운이 아닌 문서는 마크다운 포맷으로 변환
 
-### Step 5: Thorough Completeness Analysis
+### Step 5: 철저한 완전성 분석
 
-**CRITICAL**: Use comprehensive analysis to evaluate requirements completeness. Default to asking questions when there is ANY ambiguity or missing detail.
+**CRITICAL**: 요구사항의 완전성을 평가할 때 종합 분석을 사용합니다. 조금이라도 모호하거나 누락된 세부가 있으면 기본적으로 질문하세요.
 
-**MANDATORY**: Evaluate ALL of these areas and ask questions for ANY that are unclear:
-- **Functional Requirements**: Core features, user interactions, system behaviors
-- **Non-Functional Requirements**: Performance, security, scalability, usability
-- **User Scenarios**: Use cases, user journeys, edge cases, error scenarios
-- **Business Context**: Goals, constraints, success criteria, stakeholder needs
-- **Technical Context**: Integration points, data requirements, system boundaries
-- **Quality Attributes**: Reliability, maintainability, testability, accessibility
+**MANDATORY**: 아래 영역을 **모두** 평가하고, 불명확한 부분이 있으면 질문하세요:
+- **Functional Requirements**: 핵심 기능, 사용자 상호작용, 시스템 동작
+- **Non-Functional Requirements**: 성능, 보안, 확장성, 사용성
+- **User Scenarios**: 유스케이스, 사용자 여정, 엣지 케이스, 에러 시나리오
+- **Business Context**: 목표, 제약, 성공 기준, 이해관계자 요구
+- **Technical Context**: 통합 지점, 데이터 요구사항, 시스템 경계
+- **Quality Attributes**: 신뢰성, 유지보수성, 테스트 용이성, 접근성
 
-**When in doubt, ask questions** - incomplete requirements lead to poor implementations.
+**애매할 때는 질문하세요** — 불완전한 요구사항은 부실한 구현으로 이어집니다.
 
-### Step 5.1: Extension Opt-In Prompts
+### Step 5.1: 익스텐션 Opt-In 프롬프트
 
-**MANDATORY**: Scan all loaded `*.opt-in.md` files (loaded at workflow start from `extensions/` subdirectories) for an `## Opt-In Prompt` section. For each extension that declares one, include that question in the clarifying questions file created in Step 6. Present each opt-in question in the same language as the user's conversation.
+**MANDATORY**: 워크플로우 시작 시 `extensions/` 하위 디렉터리에서 로드된 모든 `*.opt-in.md` 파일에서 `## Opt-In Prompt` 섹션을 스캔합니다. 그것을 선언한 각 익스텐션에 대해, Step 6에서 만드는 명확화 질문 파일에 해당 질문을 포함하세요. 각 opt-in 질문은 사용자와의 대화와 동일한 언어로 제시합니다.
 
-After receiving answers:
-1. Record each extension's enablement status in `aidlc-docs/aidlc-state.md` under `## Extension Configuration`:
+답변을 받으면:
+1. 각 익스텐션의 활성화 상태를 `aidlc-docs/aidlc-state.md`의 `## Extension Configuration`에 기록:
 
 ```markdown
 ## Extension Configuration
@@ -104,66 +104,66 @@ After receiving answers:
 | [Extension Name] | [Yes/No] | Requirements Analysis |
 ```
 
-2. **Deferred Rule Loading**: For each extension the user opted IN, load the full rules file now. The rules file is derived by naming convention: strip `.opt-in.md` from the opt-in filename and append `.md` (e.g., `security-baseline.opt-in.md` → `security-baseline.md`). For extensions the user opted OUT, do NOT load the full rules file.
+2. **Deferred Rule Loading**: 사용자가 옵트인한 각 익스텐션에 대해, 이제 전체 룰 파일을 로드합니다. 룰 파일은 명명 규약으로 도출됩니다 — opt-in 파일명에서 `.opt-in.md`를 제거하고 `.md`를 붙입니다(예: `security-baseline.opt-in.md` → `security-baseline.md`). 사용자가 옵트아웃한 익스텐션은 전체 룰 파일을 로드하지 **마세요.**
 
-### Step 6: Generate Clarifying Questions (PROACTIVE APPROACH)
-   - **ALWAYS** create `aidlc-docs/inception/requirements/requirement-verification-questions.md` unless requirements are exceptionally clear and complete
-   - Ask questions about ANY missing, unclear, or ambiguous areas
-   - Focus on functional requirements, non-functional requirements, user scenarios, and business context
-   - Request user to fill in all [Answer]: tags directly in the questions document
-   - If presenting multiple-choice options for answers:
-     - Label the options as A, B, C, D etc.
-     - Ensure options are mutually exclusive and don't overlap
-     - ALWAYS include option for custom response: "X) Other (please describe after [Answer]: tag below)"
-   - Wait for user answers in the document
-   - **MANDATORY**: Analyze ALL answers for ambiguities and create follow-up questions if needed
-   - **MANDATORY**: Keep asking questions until ALL ambiguities are resolved OR user explicitly asks to proceed
+### Step 6: 명확화 질문 생성 (사전적 접근)
+   - 요구사항이 예외적으로 명확하고 완전한 경우가 아니라면 **항상** `aidlc-docs/inception/requirements/requirement-verification-questions.md`를 생성합니다.
+   - 누락/불명확/모호한 영역에 대해 질문하세요.
+   - 기능 요구사항, 비기능 요구사항, 사용자 시나리오, 비즈니스 맥락에 집중하세요.
+   - 사용자에게 질문 문서의 [Answer]: 태그에 직접 답변을 채우도록 요청합니다.
+   - 객관식 옵션을 제시하는 경우:
+     - 옵션은 A, B, C, D 등으로 라벨링
+     - 옵션은 상호 배타적이며 겹치지 않도록
+     - 사용자 정의 응답을 위한 옵션을 항상 포함: "X) Other (please describe after [Answer]: tag below)"
+   - 문서에서 사용자 답변을 기다립니다.
+   - **MANDATORY**: 모든 답변을 모호성 관점에서 분석하고, 필요하면 후속 질문을 만드세요.
+   - **MANDATORY**: 모든 모호성이 해소되거나 사용자가 명시적으로 진행을 요청할 때까지 계속 질문하세요.
 
-### ⛔ GATE: Await User Answers
-DO NOT proceed to Step 7 until all questions in requirement-verification-questions.md are answered and validated.
-Present the question file to the user and STOP.
+### ⛔ GATE: 사용자 답변 대기
+requirement-verification-questions.md의 모든 질문이 답변되고 검증될 때까지 Step 7로 진행하지 마세요.
+질문 파일을 사용자에게 제시한 뒤 멈추세요.
 
-### Step 7: Generate Requirements Document
-   - **PREREQUISITE**: Step 6 gate must be passed — all answers received and analyzed
-   - Create `aidlc-docs/inception/requirements/requirements.md`
-   - Include intent analysis summary at the top:
-     - User request
-     - Request type
-     - Scope estimate
-     - Complexity estimate
-   - Include both functional and non-functional requirements
-   - Incorporate user's answers to clarifying questions
-   - Provide brief summary of key requirements
+### Step 7: 요구사항 문서 생성
+   - **PREREQUISITE**: Step 6의 게이트가 통과되어야 합니다 — 모든 답변이 수신·분석되어야 함.
+   - `aidlc-docs/inception/requirements/requirements.md`를 생성합니다.
+   - 상단에 intent 분석 요약을 포함:
+     - 사용자 요청
+     - 요청 유형
+     - 범위 추정
+     - 복잡도 추정
+   - 기능/비기능 요구사항을 모두 포함
+   - 명확화 질문에 대한 사용자 답변을 반영
+   - 핵심 요구사항의 간단한 요약 제공
 
-### Step 8: Update State Tracking
+### Step 8: 상태 추적 업데이트
 
-Update `aidlc-docs/aidlc-state.md`:
+`aidlc-docs/aidlc-state.md` 업데이트:
 
 ```markdown
 ## Stage Progress
 ### 🔵 INCEPTION PHASE
 - [x] Workspace Detection
-- [x] Reverse Engineering (if applicable)
+- [x] Reverse Engineering (해당 시)
 - [x] Requirements Analysis
 ```
 
-### Step 9: Log and Proceed
-   - Log approval prompt with timestamp in `aidlc-docs/audit.md`
-   - Present completion message in this structure:
-     1. **Completion Announcement** (mandatory): Always start with this:
+### Step 9: 로깅 후 진행
+   - `aidlc-docs/audit.md`에 승인 프롬프트를 타임스탬프와 함께 로깅합니다.
+   - 다음 구조로 완료 메시지를 제시:
+     1. **완료 알림** (필수): 항상 다음으로 시작:
 
 ```markdown
 # 🔍 Requirements Analysis Complete
 ```
 
-     2. **AI Summary** (optional): Provide structured bullet-point summary of requirements
-        - Format: "Requirements analysis has identified [project type/complexity]:"
-        - List key functional requirements (bullet points)
-        - List key non-functional requirements (bullet points)
-        - Mention architectural considerations or technical decisions if relevant
-        - DO NOT include workflow instructions ("please review", "let me know", "proceed to next phase", "before we proceed")
-        - Keep factual and content-focused
-     3. **Formatted Workflow Message** (mandatory): Always end with this exact format:
+     2. **AI Summary** (선택): 요구사항을 구조화된 불릿으로 요약 제공
+        - 형식: "Requirements analysis has identified [project type/complexity]:"
+        - 핵심 기능 요구사항을 불릿으로 나열
+        - 핵심 비기능 요구사항을 불릿으로 나열
+        - 관련 있다면 아키텍처 고려사항이나 기술 결정 언급
+        - 워크플로우 안내 문구는 **포함하지 마세요** ("please review", "let me know", "proceed to next phase", "before we proceed")
+        - 사실/내용 중심으로 유지
+     3. **포맷팅된 워크플로우 메시지** (필수): 항상 정확히 이 형식으로 끝맺으세요:
 
 ```markdown
 > **📋 <u>**REVIEW REQUIRED:**</u>**  
@@ -183,8 +183,8 @@ Update `aidlc-docs/aidlc-state.md`:
 ---
 ```
 
-**Note**: Include the "Add User Stories" option only when User Stories stage will be skipped. Replace [User Stories/Workflow Planning] with the actual next stage name.
+**참고**: "Add User Stories" 옵션은 User Stories 스테이지가 건너뛰어질 때만 포함합니다. [User Stories/Workflow Planning] 부분은 실제 다음 스테이지 이름으로 치환하세요.
 
-   - Wait for explicit user approval before proceeding
-   - Record approval response with timestamp
-   - Update Requirements Analysis stage complete in aidlc-state.md
+   - 진행 전에 명시적 사용자 승인을 기다립니다.
+   - 승인 응답을 타임스탬프와 함께 기록합니다.
+   - aidlc-state.md에서 Requirements Analysis 스테이지를 완료로 업데이트합니다.
